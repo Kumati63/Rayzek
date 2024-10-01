@@ -66,11 +66,23 @@
 
             </div>
         </div>
-        {% block  %}{% endblock  %}
+        <!-- Bloque para el contenido principal de la página -->
+        {% block contenido %}
+        
+        {% endblock contenido %}
+
+        <!-- Bloque para el footer de página -->
+        {% block footer %}
+        
+        {% endblock footer %}
+        
+        <!-- Bloque para el JavaScript de la página -->
+        {% block js %}
+        
+        {% endblock js %}
     </div>
 
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <script src="js/Landingpage.js"></script>
     <script src="{% static '/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
