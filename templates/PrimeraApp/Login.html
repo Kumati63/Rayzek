@@ -11,64 +11,6 @@
     <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-    <!-- <script>
-        $(function() {
-            $(document).ready(function() {
-                $(document).on("contextmenu", function(e) {
-                    e.preventDefault();
-                });
-            });
-            $("#no").hide();
-            $("#yes").hide();
-            $("#submit-button").prop("disabled", true);
-            toggleStyles(true);
-            $('#email').on("blur", function() {
-                if ($(this).val().length === 0) {
-                    $(this).css("border-color", "red");
-                } else {
-                    $(this).css("border-color", "white");
-                    validaremail();
-                }
-            });
-            $('#contrasena').on("blur", function() {
-                if ($(this).val().length === 0) {
-                    $(this).css("border-color", "red");
-                } else {
-                    $(this).css("border-color", "white");
-                }
-            });
-        });
-        
-        function validar_login() {
-            if (document.form.email.value == "") {
-                swal("Debe ingresar un Email");
-                document.form.email.focus();
-                return false;
-            }
-            if (document.form.contrasena.value == "") {
-                swal("Debe ingresar una contrasena");
-                document.form.contrasena.focus();
-                return false;
-            }
-            document.form.submit();
-        }
-
-        function validaremail() {
-            // Aquí iría la lógica Ajax para validar el email si fuera necesario.
-        }
-
-        function toggleStyles(applyStyles) {
-            if (applyStyles) {
-                $("#submit-button").css({
-                    "background-color": "gray",
-                    "color": "black",
-                    "border": "none"
-                });
-            } else {
-                $("#submit-button").removeAttr("style");
-            }
-        }
-    </script> -->
 </head>
 
 <body>
