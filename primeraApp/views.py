@@ -11,3 +11,6 @@ def Login(request):
 
 def Signup(request):
     return render(request,'PrimeraApp\Signup.html')
+
+def mainmenu(request):
+    return render(request,'PrimeraApp\mainmenu.html')
