@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/icon/favicon.ico' %}">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="{% static 'css/styles_signup.css' %}">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <div class="container">
+        <form method="post" id="apply-form" name="form" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="logo_image">
+                <a href="/"><img src="{% static 'img/icon.png' %}" alt="icon" class="image"></a>
+            </div>
+
+            <h1 id="title">REGISTRARSE</h1>
+
+            <div class="container_signup">
+                <div class="input-box-group">
+                    <div class="input-box">
+                        <label for="nombre">Nombre</label><br>
+                        <input type="text" placeholder="Ingresar Nombre" id="nombre" name="nombre" required><br>
+                    </div>
+
+                    <div class="input-box">
+                        <label for="email">Email</label><br>
+                        <input type="email" placeholder="Ingresar Email" id="email" name="email" required><br>
+                    </div>
+                </div>
+
+                <div class="input-box-group">
+                    <div class="input-box">
+                        <label for="contrasena">Contraseña</label><br>
+                        <input type="password" placeholder="Ingresar Contraseña" id="contrasena" name="contrasena"
+                            required><br>
+                    </div>
+
+                    <div class="input-box">
+                        <label for="contrasena">Repetir Contraseña</label><br>
+                        <input type="password" placeholder="Ingresar Contraseña" id="contrasena" name="contrasena"
+                            required><br>
+                    </div>
+                </div>
+
+                <div class="input-box-group">
+                    <div class="input-box">
+                        <div class="files">
+                            <label for="File">Imagen Perfil</label>
+                            <input type="file" id="File" name="File" required>
+                        </div>
+                    </div>
+
+                    <div class="input-box">
+                        <div class="photos">
+
+                        </div>
+                    </div>
+                </div>
+
+                <button class="button" id="submit-button" type="submit">Enviar</button>
+
+                <div class="bottom">
+                    <label>
+                        <div><input type="checkbox" id="terms" name="terms" checked required> Acepto los <a
+                                href="">Términos y Servicios</a></div>
+                        <div>¿Tienes una cuenta?   <a href="/Login/">Login</a></div>
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="{% static 'js/sweetalert.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+</body>
+
+</html>

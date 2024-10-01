@@ -1,0 +1,140 @@
+* {
+   padding: 0;
+   margin: 0; 
+   box-sizing: border-box;
+   font-family: 'Poppins', sans-serif;
+   font-weight: bold;
+   color:#fff;
+}
+
+body {
+    margin: 0;
+    display: block;
+    color: #000000;
+}
+
+.container {
+    background-image: url('/static/img/background.png');
+    background-position: center;
+    background-size: cover;
+    position: absolute;
+    display: block;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#title {
+    font-size: 45px;
+    text-align: center;
+}
+
+.container .logo_image {
+    width: 80px;
+    margin:  auto;
+    margin-top: 25px;
+    text-align: center;
+}
+
+.image {
+    min-width: 100%;
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+.container form {
+    border: 2px solid #fff;
+    width: 380px;
+    height: 538px;
+    margin: 150px auto;
+    background-color: transparent;
+    border-radius: 40px;
+    backdrop-filter: blur(55px);
+}
+
+.container .input-box{
+    width: 350px;
+    height: 100px;
+    margin: 10px auto;
+    margin-top: -15px;
+    padding: 20px;
+}
+
+.container .input-box input {
+    width: 100%;
+    height: 46px;
+    padding: 10px 20px;
+    display: inline-block;
+    color: #fff;
+    border: none;
+    border-bottom: 3px solid rgb(255, 236, 226);
+    border-radius: 15px;
+    box-sizing: border-box;
+    background-color: transparent;
+    outline-color: rgb(255, 231, 212);
+    
+}
+
+.container input::placeholder{
+    color: #fff;
+}
+
+.container .input-box label{
+    margin-left: 14px;
+}
+
+.container .forgot{
+    height: 15px;
+    margin: 20px 0;
+    margin-top: 20px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.container i{
+    margin-top: 15px;
+    position: absolute;
+    right: 50px;
+    font-size: 20px;
+    color: #fff;
+}
+
+a {
+    font-size: 15px;
+    color: #2024F9;
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+span{
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    margin-top: -9px;
+}
+
+.button{
+    background-color: white;/* Green */
+    color: #000000;
+    padding: 9px 12px;
+    border: none;
+    border-radius: 40px;
+    width: 80%;
+    margin-left: 33px;
+    transition-duration: 0.1s;
+    font-size: 19px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.button:hover {
+  background-color: rgb(255, 121, 32); /* Green */
+  color: white;
+}

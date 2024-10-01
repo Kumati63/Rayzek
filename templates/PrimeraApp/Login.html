@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/icon/favicon.ico' %}">
+    <title>Login</title>
+    <link rel="stylesheet" href="{% static 'css/style_login.css' %}">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- <script>
+        $(function() {
+            $(document).ready(function() {
+                $(document).on("contextmenu", function(e) {
+                    e.preventDefault();
+                });
+            });
+            $("#no").hide();
+            $("#yes").hide();
+            $("#submit-button").prop("disabled", true);
+            toggleStyles(true);
+            $('#email').on("blur", function() {
+                if ($(this).val().length === 0) {
+                    $(this).css("border-color", "red");
+                } else {
+                    $(this).css("border-color", "white");
+                    validaremail();
+                }
+            });
+            $('#contrasena').on("blur", function() {
+                if ($(this).val().length === 0) {
+                    $(this).css("border-color", "red");
+                } else {
+                    $(this).css("border-color", "white");
+                }
+            });
+        });
+        
+        function validar_login() {
+            if (document.form.email.value == "") {
+                swal("Debe ingresar un Email");
+                document.form.email.focus();
+                return false;
+            }
+            if (document.form.contrasena.value == "") {
+                swal("Debe ingresar una contrasena");
+                document.form.contrasena.focus();
+                return false;
+            }
+            document.form.submit();
+        }
+
+        function validaremail() {
+            // Aquí iría la lógica Ajax para validar el email si fuera necesario.
+        }
+
+        function toggleStyles(applyStyles) {
+            if (applyStyles) {
+                $("#submit-button").css({
+                    "background-color": "gray",
+                    "color": "black",
+                    "border": "none"
+                });
+            } else {
+                $("#submit-button").removeAttr("style");
+            }
+        }
+    </script> -->
+</head>
+
+<body>
+    <div class="container">
+        <form method="post" name="form" action="">
+            {% csrf_token %}
+            <div class="logo_image">
+                <a href="/"><img src="{% static 'img/icon.png' %}" alt="icon" class="image"></a>
+            </div>
+            <h1 id="title">Login</h1>
+
+            <div class="input-box">
+                <label for="email">Email</label><br>
+                <div class="error">
+                    <input type="email" id="email" placeholder="Ingresar Email" name="email" required>
+                    <i class='bx bxs-user'></i>
+                    <!-- <p id="no" style="color: red; font-size: 13px; margin-left: 20px;">Email no registrado</p>
+                    <p id="yes" style="color: green; font-size: 13px; margin-left: 20px;">Email registrado</p> -->
+                </div>
+            </div>
+
+            <div class="input-box">
+                <label for="contrasena">Contraseña</label><br>
+                <input type="password" id="contrasena" placeholder="Ingresar contraseña" name="contrasena" required>
+                <i class='bx bxs-lock'></i>
+            </div>
+
+            <div class="forgot">
+                <div>
+                    <label><input id="forget" type="checkbox" name="remember"> Recuérdame</label>
+                </div>
+                <div>
+                    <a id="singin" href="#">¿Olvidaste la contraseña?</a>
+                </div>
+            </div>
+
+            <button class="button" id="submit-button" type="button" onclick="validar_login()">Enviar</button>
+            <br><br>
+            <span>¿Nuevo usuario? <a href="/Signup/"> Crear una cuenta</a></span>
+        </form>
+    </div>
+    <script src="{% static 'js/validarLogin.js' %}"></script>
+    <script src="{% static 'js/sweetalert.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+</body>
+
+</html>
