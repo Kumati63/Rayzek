@@ -17,6 +17,9 @@ def Signup(request):
 def main(request):
     return render(request,'PrimeraApp\main.html')
 
+def CrudDispositivos(request):
+    return render(request,'PrimeraApp\CrudDispositivos.html')
+
 
 """
 Este es un método temporal para guardar cosas en la página. El modelo no se actualiza con los datos y al reiniciar la página se eliminan.

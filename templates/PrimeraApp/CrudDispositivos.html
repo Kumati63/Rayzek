@@ -17,7 +17,7 @@
 </head>
 <body>
     <div class="container">
-      <!-- Navbar -->
+        <!-- Navbar -->
         <div class="row">            
             <div class="col-lg-12">
                 <nav class="navbar navbar-dark bg-dark fixed-top">
@@ -55,15 +55,13 @@
                                 </ul>
                               </li>
                               <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="CrudDispositivos">Gestion de dispositivos</a>
+                                <a class="nav-link active" aria-current="page" href="/CrudDispositivos/">Gestion de dispositivos</a>
                               </li>
                           </ul>                          
                         </div>
                       </div>
                     </div>
                   </nav>
-            </div>
-            <div class="col">
             </div>
         </div>
         <!-- Bloque para el contenido principal de la página -->
@@ -76,13 +74,12 @@
         
         {% endblock footer %}
         
-        <!-- Bloque para el JavaScript de la página -->
-        {% block js %}
         
-        {% endblock js %}
     </div>
-
+    <!-- Bloque para el JavaScript de la página -->
+    {% block js %}
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <script src="{% static '/js/bootstrap.bundle.min.js' %}"></script>
+    {% endblock js %}
 </body>
 </html>

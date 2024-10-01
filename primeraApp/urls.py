@@ -8,4 +8,5 @@ urlpatterns = [
     path('Signup/', views.Signup,name='Signup'),
     path('main/', views.main,name='main'),
     path('CrudNotificaciones/', views.CrudNotificaciones,name='CrudNotificaciones'),
+    path('CrudDispositivos/', views.CrudDispositivos,name='CrudDispositivos'),
 ]
