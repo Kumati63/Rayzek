@@ -1,9 +1,10 @@
 {% extends "primeraApp/main.html" %}
+{% load static %}
 
 {% block contenido %}
 <div class="container mt-5">
     <hr>
-    <h2>Notificaciones</h2>
+    <h2 class="text-white">Notificaciones</h2>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -22,10 +23,13 @@
                 <td>{{ valor.alerta }}</td>
                 <td>{{ valor.timestamp }}</td>
                 <td>{{ valor.usuario }}</td>
-                <td>{{ valor.acciones }}</td>
+                <td>
+                    &nbsp;<img src="{% static 'img/delete.png' %}" alt="Delete">&nbsp;&nbsp;&nbsp;&nbsp;<img src="{% static 'img/update.png' %}" alt="Delete">
+                </td>
             </tr>
             {% endfor %}
         </tbody>
+    </table>
     </table>
     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addNotificationModal">
         Agregar Notificación
