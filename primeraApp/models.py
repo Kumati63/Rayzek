@@ -7,21 +7,21 @@ usuarios = {
         "id": 1,
         "nombre": "Marcelo",
         "email": "marcelo@a.com",
-        "contraseña": "qwerty",
+        "contrasena": "qwerty",
         "tipo": "administrador"
     },
     2: {
         "id": 2,
         "nombre": "Jeff",
         "email": "jeff@a.com",
-        "contraseña": "qwerty",
+        "contrasena": "qwerty",
         "tipo": "usuario"
     },
     3: {
         "id": 3,
         "nombre": "Matias",
         "email": "matias@a.com",
-        "contraseña": "qwerty",
+        "contrasena": "qwerty",
         "tipo": "tecnico"
     }
 }
@@ -91,5 +91,20 @@ mediciones = {
         "dispositivo": "Televisor",
         "timestamp": datetime.now(),
         "consumo": 25.3
+    }
+}
+
+Tipo_usuario = {
+    1: {
+        "id":1,
+        "Tipo":"Administrador"
+    },
+    2: {
+        "id":2,
+        "Tipo":"Usuario"
+    },
+    3: {
+        "id":3,
+        "Tipo":"tecnico"
     }
 }

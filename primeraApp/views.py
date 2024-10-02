@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from primeraApp.models import alertas
 from primeraApp.models import dispositivos
 from primeraApp.models import usuarios
+from primeraApp.models import Tipo_usuario
 from datetime import datetime
 from django.shortcuts import render, redirect
 
@@ -27,7 +28,8 @@ def CrudDispositivos(request):
 
 def CrudInvitaciones(request):
     data = {
-        'usuarios': usuarios
+        'usuarios': usuarios,
+        'Tipo_usuario': Tipo_usuario
     }
     return render(request,'PrimeraApp\CrudInvitaciones.html',data)
 

@@ -14,13 +14,25 @@
                       <!-- Aquí se colocarán los campos del formulario -->
                       <form>
                         <div class="form-group" style="font-family: Arial, Helvetica, sans-serif; box-shadow: 5px 5px 5px black;">
-                        <h2 style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 3em; border-radius: 5px;">Formulario de Registro</h2>
+                        <h2 style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 3em; border-radius: 5px;">Invitar Usuario</h2>
                         <br>
                           <label for="nombre">Nombre Completo:</label>
                           <input type="text" class="form-control" style="box-shadow: 5px 5px 5px black;" id="nombre" name="nombre" required/>
                           <br>
                           <label for="correo">Correo electrónico:</label>
                           <input type="email" class="form-control" style="box-shadow: 5px 5px 5px black;" id="correo" name="correo" required/>
+                          <br>
+                          <label for="tipo">Seleccione tipo de usuario:</label><br><br>
+                          {% comment %} <input type="" class="form-control" style="box-shadow: 5px 5px 5px black;" id="correo" name="correo" required/> {% endcomment %}
+                          
+                          <select name="tipo" id="tipo" required>
+                            <option value="Seleccionar">Seleccionar</option>
+                            {% for clave, valor in Tipo_usuario.items %}
+                            <option value="clave">{{valor.Tipo}}</option>
+                            {% endfor %}
+                          </select>
+                          
+                        <br>
                           <br>
                           <button type="submit" class="btn btn-primary" style="box-shadow: 5px 5px 5px black;">Enviar</button>
                           <br>
@@ -61,6 +73,7 @@
                                                   <th>#</th>
                                                   <th>Nombre Completo</th>
                                                   <th>Correo electronico</th> 
+                                                  <th>tipo</th> 
                                                   <th>Action</th>
                                               </tr>
                                           </thead>
@@ -71,6 +84,7 @@
                                                       <td>{{ valor.id }}</td>
                                                       <td>{{ valor.nombre }}</td>
                                                       <td>{{ valor.email }}</td>
+                                                      <td>{{ valor.tipo}}</td> 
                                                       <td>
                                                           <ul class="action-list">
                                                               <li><a href="#" data-tip="edit"><i class="fa fa-edit"></i></a>
