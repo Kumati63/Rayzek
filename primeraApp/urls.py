@@ -9,4 +9,5 @@ urlpatterns = [
     path('main/', views.main,name='main'),
     path('CrudNotificaciones/', views.CrudNotificaciones,name='CrudNotificaciones'),
     path('CrudDispositivos/', views.CrudDispositivos,name='CrudDispositivos'),
+    path('Menu/', views.Menu,name='Menu'),
 ]

@@ -50,3 +50,6 @@ def CrudNotificaciones(request):
     }
     return render(request,'PrimeraApp\CrudNotificaciones.html',data)
 
+def Menu(request):
+    return render(request,'PrimeraApp\Menu.html')
+
