@@ -31,22 +31,22 @@ usuarios = {
 dispositivos = {
     1: {
         "id": 1,
-        "nombre": "Luz Sala",
-        "estado": 1,
+        "Dispositivo": "Luz Sala",
+        "Ubicacion": "Sala 2do piso",
         "tipo": "luz",
         "UmbralConsumo": 0
     },
     2: {
         "id": 2,
-        "nombre": "Luz Cocina",
-        "estado": 2,
+        "Dispositivo": "Luz Cocina",
+        "Ubicacion": "Cocina",
         "tipo": "luz",
         "UmbralConsumo": 0
     },
     3: {
         "id": 3,
-        "nombre": "Televisor",
-        "estado": 1,
+        "Dispositivo": "Televisor",
+        "Ubicacion": "living",
         "tipo": "tv",
         "UmbralConsumo": 0
     }

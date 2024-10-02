@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from primeraApp.models import alertas
+from primeraApp.models import dispositivos
 from datetime import datetime
 from django.shortcuts import render, redirect
 
@@ -18,7 +19,10 @@ def main(request):
     return render(request,'PrimeraApp\main.html')
 
 def CrudDispositivos(request):
-    return render(request,'PrimeraApp\CrudDispositivos.html')
+    data = {
+        'dispositivos': dispositivos
+    }
+    return render(request,'PrimeraApp\CrudDispositivos.html',data)
 
 
 """
