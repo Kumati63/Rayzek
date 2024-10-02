@@ -25,10 +25,10 @@ def CrudDispositivos(request):
     return render(request,'PrimeraApp\CrudDispositivos.html',data)
 
 
-"""
-Este es un método temporal para guardar cosas en la página. El modelo no se actualiza con los datos y al reiniciar la página se eliminan.
-Para cambiar eso, debemos trabajar o con una base de datos o un JSON.
-"""
+
+# Este es un método temporal para guardar cosas en la página. El modelo no se actualiza con los datos y al reiniciar la página se eliminan.
+# Para cambiar eso, debemos trabajar o con una base de datos o un JSON.
+
 def CrudNotificaciones(request):
     # Comprueba si llegan datos del formulario
     if request.method == 'POST':
