@@ -5,8 +5,8 @@
 <div class="container mt-5">
     <hr>
     <h2 class="text-white">Notificaciones</h2>
-    <table class="table table-bordered">
-        <thead>
+    <table class="table table-bordered" style="background-color: #fff; color: black;">
+        <thead style="background-color: #343a40; ">
             <tr>
                 <th>ID</th>
                 <th>Alerta</th>
@@ -18,7 +18,7 @@
         <tbody>
             <!-- Iterar el diccionario de alertas para mostrarlo en la tabla -->
             {% for clave, valor in alertas.items %}
-            <tr>
+            <tr style="background-color: white; color: black;">
                 <td>{{ valor.id }}</td>
                 <td>{{ valor.alerta }}</td>
                 <td>{{ valor.timestamp }}</td>
