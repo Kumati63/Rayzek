@@ -19,8 +19,14 @@ form .inside{
     border: 1px solid #cbcbcb;
 }
 
-form .btn{
+#btnSubmitDis{
     background: rgba(80, 79, 77, 0.9);
+    color: #fff;
+    border: none;
+}
+
+#btnSubmitDis:hover{
+    background: rgba(54, 54, 54, 0.9);
     color: #fff;
     border: none;
 }
