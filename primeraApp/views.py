@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from primeraApp.models import alertas
 from primeraApp.models import dispositivos
+from primeraApp.models import usuarios
 from datetime import datetime
 from django.shortcuts import render, redirect
 
@@ -23,6 +24,12 @@ def CrudDispositivos(request):
         'dispositivos': dispositivos
     }
     return render(request,'PrimeraApp\CrudDispositivos.html',data)
+
+def CrudInvitaciones(request):
+    data = {
+        'usuarios': usuarios
+    }
+    return render(request,'PrimeraApp\CrudInvitaciones.html',data)
 
 
 

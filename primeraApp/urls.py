@@ -9,5 +9,6 @@ urlpatterns = [
     path('main/', views.main,name='main'),
     path('CrudNotificaciones/', views.CrudNotificaciones,name='CrudNotificaciones'),
     path('CrudDispositivos/', views.CrudDispositivos,name='CrudDispositivos'),
+    path('CrudInvitaciones/', views.CrudInvitaciones,name='CrudInvitaciones'),
     path('Menu/', views.Menu,name='Menu'),
 ]
