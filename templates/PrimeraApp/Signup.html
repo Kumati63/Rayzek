@@ -44,7 +44,7 @@
 
                     <div class="input-box">
                         <label for="contrasena">Repetir Contraseña</label><br>
-                        <input type="password" placeholder="Ingresar Contraseña" id="contrasena" name="contrasena"
+                        <input type="password" placeholder="Ingresar Contraseña" id="contrasena2" name="contrasena2"
                             required><br>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                     </div>
                 </div>
 
-                <button class="button" id="submit-button" type="submit">Enviar</button>
+                <button class="button" id="submit-button" type="submit" onclick="validarSignup()">Enviar</button>
 
                 <div class="bottom">
                     <label>
@@ -76,8 +76,11 @@
             </div>
         </form>
     </div>
-    <script src="{% static 'js/sweetalert.min.js' %}"></script>
+    <!-- Rayzek\static\js\validarSingup.js -->
     <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'js/validarSingup.js' %}"></script>
+    <script src="{% static 'js/sweetalert.min.js' %}"></script>
+    
 </body>
 
 </html>

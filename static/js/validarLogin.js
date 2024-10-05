@@ -11,7 +11,8 @@ $(function() {
     $('#email').on( "blur", function() 
     {
         if ($(this).val().length === 0) {
-            $(this).css("border-color","red"); ;
+            $(this).css("border-color","red");
+            swal("Debe ingresar un Email");
         }else{
             $(this).css("border-color","white");
             validaremail();
@@ -20,6 +21,7 @@ $(function() {
     $('#contrasena').on( "blur", function() {
         if ($(this).val().length === 0) {
             $(this).css("border-color","red");
+            swal("Debe ingresar una contraseña");
         }else{
             $(this).css("border-color","white");
         }
@@ -35,7 +37,7 @@ function validar_login(){
     }
 
     if (document.form.contrasena.value==""){
-        swal("Debe ingresar una contrasena");
+        swal("Debe ingresar una contraseña");
         document.form.contrasena.focus();
         return false;
     }
