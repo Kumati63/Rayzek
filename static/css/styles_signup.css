@@ -173,7 +173,7 @@ a:hover {
     transition-duration: 0.1s;
     font-size: 19px;
     font-family: 'Poppins', sans-serif;
-    margin-top: 10px;
+    margin-top: 100px;
 }
 
 .button:hover {
@@ -191,4 +191,19 @@ a:hover {
     margin-left: 25px;
     font-size: 16px;
     margin-bottom: 20px;
+}
+
+.photos {
+    width: 300px;
+    height: 150px;
+    margin-top: 20px;
+    border: 5px solid #ccc; /* Opcional, para visualizar el borde */
+    overflow: hidden; /* Oculta el contenido desbordado */
+}
+
+#imagePreview img {
+    width: 100%;        /* Ajusta el ancho de la imagen al contenedor */
+    height: 100%;       /* Ajusta la altura de la imagen al contenedor */
+    object-fit: contain; /* Ajusta la imagen dentro del área sin recortar */
+    object-position: center; /* Centra la imagen en el contenedor */
 }

@@ -22,6 +22,14 @@ $(function() {
             $(this).css("border-color","white");
         }
     });
+
+    // javascript para prohibir ciertos caracteres
+
+    // $('#contrasena').on('input', function() {
+    //     var sanitizedValue = $(this).val().replace(/[^a-z0-9 !#$%&()*+-./:;=?@[\]{|}~]/gi, '');
+    //     $(this).val(sanitizedValue);
+    // });
+
     $('#email').on("blur", function() {
         const emailValue = $(this).val();
         if (emailValue.length === 0) {
@@ -54,14 +62,6 @@ $(function() {
     });
 
     
-    $('#File').on( "change", function() {
-        if ($(this).val().length === 0) {
-            $(this).css("border-color", "red");
-            swal("Debe subir un archivo");
-            return;
-        }
-    });
-
     $('#File').on("change", function() {
         var fileInput = $(this)[0].files[0]; // Obtener el archivo seleccionado
     
@@ -81,10 +81,20 @@ $(function() {
             $(this).css("border-color", "red");
             swal("Debe subir una imagen válida (jpg, jpeg, png, gif)");
         } else {
-            // Si el archivo es válido
+            // Si el archivo es válido, mostrar la imagen
             $(this).css("border-color", "white");
+    
+            // Crear un FileReader para mostrar la imagen
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                // Mostrar la imagen en el div con id "imagePreview" usando las clases correctas
+                $('#imagePreview').html('<img src="' + e.target.result + '" alt="Imagen de perfil" class="image">');
+            }
+            reader.readAsDataURL(fileInput); // Leer el archivo como una URL de datos
         }
     });
+    
+    
 });
 
 
