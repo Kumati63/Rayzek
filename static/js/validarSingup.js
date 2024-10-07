@@ -23,12 +23,10 @@ $(function() {
         }
     });
 
-    // javascript para prohibir ciertos caracteres
-
-    // $('#contrasena').on('input', function() {
-    //     var sanitizedValue = $(this).val().replace(/[^a-z0-9 !#$%&()*+-./:;=?@[\]{|}~]/gi, '');
-    //     $(this).val(sanitizedValue);
-    // });
+    $('#nombre').on('input', function() {
+        var sanitizedValue = $(this).val().replace(/[^a-z ]/gi, '');
+        $(this).val(sanitizedValue);
+    });
 
     $('#email').on("blur", function() {
         const emailValue = $(this).val();
@@ -52,6 +50,12 @@ $(function() {
         }
     });
 
+    //javascript para prohibir ciertos caracteres
+    $('#contrasena').on('input', function() {
+        var sanitizedValue = $(this).val().replace(/[^a-z0-9 !#$%&()*+-./:;=?@[\]{|}~]/gi, '');
+        $(this).val(sanitizedValue);
+    });
+
     $('#contrasena2').on( "blur", function() {
         if ($(this).val().length === 0) {
             $(this).css("border-color","red");
@@ -59,6 +63,12 @@ $(function() {
         }else{
             $(this).css("border-color","white");
         }
+    });
+
+    //javascript para prohibir ciertos caracteres
+    $('#contrasena2').on('input', function() {
+        var sanitizedValue = $(this).val().replace(/[^a-z0-9 !#$%&()*+-./:;=?@[\]{|}~]/gi, '');
+        $(this).val(sanitizedValue);
     });
 
     
