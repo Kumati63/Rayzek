@@ -9,6 +9,28 @@ $(document).ready(function() {
     $("#submit-button").prop("disabled", true);
     toggleStyles(true);
 
+    // Al cargar la página, verifica si hay datos guardados en localStorage
+    if (localStorage.getItem('remember') === 'true') {
+        $('#email').val(localStorage.getItem('email')); // Rellenar el email guardado
+        $('#contrasena').val(localStorage.getItem('contrasena')); // Rellenar la contraseña guardada (NO RECOMENDADO)
+        $('#forget').prop('checked', true); // Mantener el checkbox marcado
+    }
+
+    // Evento cuando el usuario envía el formulario o marca/desmarca el checkbox
+    $('#forget').on('change', function() {
+        if ($(this).is(':checked')) {
+            // Si el checkbox está marcado, guardar el email y la contraseña en localStorage
+            localStorage.setItem('remember', 'true');
+            localStorage.setItem('email', $('#email').val());
+            localStorage.setItem('contrasena', $('#contrasena').val()); // NO RECOMENDADO
+        } else {
+            // Si el checkbox está desmarcado, borrar los datos de localStorage
+            localStorage.removeItem('remember');
+            localStorage.removeItem('email');
+            localStorage.removeItem('contrasena'); // NO RECOMENDADO
+        }
+    });
+
     // Validar email y contraseña al perder el foco
     $('#email, #contrasena').on("blur", checkFormValidity);
 
