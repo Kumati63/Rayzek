@@ -13,12 +13,15 @@ $(document).ready(function() {
     $('#email, #contrasena').on("blur", checkFormValidity);
 
     $('#email').on("blur", function() {
-        if ($(this).val().length === 0) {
+        const emailValue = $(this).val();
+        if (emailValue.length === 0) {
             $(this).css("border-color", "red");
-            swal("Debe ingresar un Email");
+            swal("Debe ingresar un email");
+        } else if (!validateEmail(emailValue)) {
+            $(this).css("border-color", "red");
+            swal("Email inválido. Asegúrese de que tenga el formato correcto.");
         } else {
             $(this).css("border-color", "white");
-            validaremail(); // Llamar validación del email
         }
     });
 
@@ -92,4 +95,9 @@ function toggleStyles(applyStyles) {
     } else {
         $("#submit-button").removeAttr("style");
     }
+}
+
+function validateEmail(email) {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailPattern.test(email);
 }

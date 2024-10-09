@@ -56,12 +56,20 @@ $(function() {
         $(this).val(sanitizedValue);
     });
 
-    $('#contrasena2').on( "blur", function() {
+    $('#contrasena2').on("blur", function() {
         if ($(this).val().length === 0) {
-            $(this).css("border-color","red");
+            $(this).css("border-color", "red");
             swal("Debe ingresar la repetición de la contraseña");
-        }else{
-            $(this).css("border-color","white");
+        } else {
+            // Verificar si las dos contraseñas coinciden
+            if ($(this).val() !== $('#contrasena').val()) {
+                $(this).css("border-color", "red");
+                $('#contrasena').css("border-color", "red");
+                swal("Las contraseñas no coinciden");
+            } else {
+                $(this).css("border-color", "white");
+                $('#contrasena').css("border-color", "white");
+            }
         }
     });
 
