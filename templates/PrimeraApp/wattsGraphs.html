@@ -1,0 +1,125 @@
+{% extends "primeraApp/main.html" %}
+{% load static %}
+<!-- Bloque para el contenido principal de la página -->
+{% block contenido %}
+    <div>
+        <canvas id="donaChart" width="400" height="400"></canvas>
+      </div>
+      <div>
+        <canvas id="lineChart" width="400" height="400"></canvas>
+      </div>
+      <div>
+        <canvas id="barChart" width="400" height="400"></canvas>
+      </div>
+{% endblock contenido %}
+
+<!-- Bloque para el footer de página -->
+{% block footer %}
+
+{% endblock footer %}
+
+<!-- Bloque para el JavaScript de la página -->
+{% block js %}
+<script>
+    // Datos de ejemplo para las corrientes
+    const currentData = [5, 10, 15, 20, 25, 30, 35];
+    
+    // 1. Gráfico de media dona (Doughnut)
+    const ctxDona = document.getElementById('donaChart').getContext('2d');
+    const donaChart = new Chart(ctxDona, {
+        type: 'doughnut',
+        data: {
+            labels: ['Corriente 1', 'Corriente 2', 'Corriente 3', 'Corriente 4', 'Corriente 5', 'Corriente 6', 'Corriente 7'],
+            datasets: [{
+                label: 'Corrientes medidas',
+                data: currentData,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(99, 255, 132, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(99, 255, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        }
+    });
+    
+    // 2. Gráfico de línea (Line)
+    const ctxLine = document.getElementById('lineChart').getContext('2d');
+    const lineChart = new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: ['Tiempo 1', 'Tiempo 2', 'Tiempo 3', 'Tiempo 4', 'Tiempo 5', 'Tiempo 6', 'Tiempo 7'],
+            datasets: [{
+                label: 'Corriente en el tiempo',
+                data: currentData,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    
+    // 3. Gráfico de barras (Bar)
+    const ctxBar = document.getElementById('barChart').getContext('2d');
+    const barChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: ['Corriente 1', 'Corriente 2', 'Corriente 3', 'Corriente 4', 'Corriente 5', 'Corriente 6', 'Corriente 7'],
+            datasets: [{
+                label: 'Mediciones de corriente',
+                data: currentData,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(99, 255, 132, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(99, 255, 132, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
+{% endblock js %}

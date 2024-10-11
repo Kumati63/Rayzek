@@ -11,4 +11,5 @@ urlpatterns = [
     path('CrudDispositivos/', views.CrudDispositivos,name='CrudDispositivos'),
     path('CrudInvitaciones/', views.CrudInvitaciones,name='CrudInvitaciones'),
     path('Menu/', views.Menu,name='Menu'),
+    path('wattsGraphs/', views.wattsGraphs,name='wattsGraphs'),
 ]

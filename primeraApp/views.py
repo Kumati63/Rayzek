@@ -33,6 +33,9 @@ def CrudInvitaciones(request):
     }
     return render(request,'PrimeraApp\CrudInvitaciones.html',data)
 
+def wattsGraphs(request):
+    return render(request,'PrimeraApp\wattsGraphs.html')
+
 
 
 # Este es un método temporal para guardar cosas en la página. El modelo no se actualiza con los datos y al reiniciar la página se eliminan.
