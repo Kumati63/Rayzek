@@ -1,125 +1,202 @@
 {% extends "primeraApp/main.html" %}
 {% load static %}
+
 <!-- Bloque para el contenido principal de la página -->
 {% block contenido %}
-    <div>
-        <canvas id="donaChart" width="400" height="400"></canvas>
-      </div>
-      <div>
-        <canvas id="lineChart" width="400" height="400"></canvas>
-      </div>
-      <div>
-        <canvas id="barChart" width="400" height="400"></canvas>
-      </div>
+    <!-- Contenedor principal para los gráficos -->
+    <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top:80px;">
+
+        <!-- Contenedor para las miniaturas -->
+        <div style="display: flex; flex-direction: column; width: 200px; margin-right: 20px;">
+            <canvas id="miniDona" width="100" height="100" style="margin-bottom:10px; cursor:pointer; transition:transform 0.3s; border:2px solid white;"></canvas>
+            <canvas id="miniLine" width="100" height="100" style="margin-bottom:10px; cursor:pointer; transition:transform 0.3s; border:2px solid white;"></canvas>
+            <canvas id="miniBar" width="100" height="100" style="margin-bottom:10px; cursor:pointer; transition:transform 0.3s; border:2px solid white;"></canvas>
+        </div>
+
+        <!-- Contenedor para el gráfico principal -->
+        <div style="border:2px solid white; width: 600px; height: 600px; display: flex; justify-content: center; align-items: center; margin-left:300px">
+            <canvas id="mainChart" width="280" height="280"></canvas>
+        </div>
+        
+    </div>
 {% endblock contenido %}
 
-<!-- Bloque para el footer de página -->
-{% block footer %}
-
-{% endblock footer %}
 
 <!-- Bloque para el JavaScript de la página -->
 {% block js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Datos de ejemplo para las corrientes
-    const currentData = [5, 10, 15, 20, 25, 30, 35];
-    
-    // 1. Gráfico de media dona (Doughnut)
-    const ctxDona = document.getElementById('donaChart').getContext('2d');
-    const donaChart = new Chart(ctxDona, {
-        type: 'doughnut',
-        data: {
-            labels: ['Corriente 1', 'Corriente 2', 'Corriente 3', 'Corriente 4', 'Corriente 5', 'Corriente 6', 'Corriente 7'],
-            datasets: [{
-                label: 'Corrientes medidas',
-                data: currentData,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(99, 255, 132, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(99, 255, 132, 1)'
-                ],
-                borderWidth: 1
-            }]
-        }
-    });
-    
-    // 2. Gráfico de línea (Line)
-    const ctxLine = document.getElementById('lineChart').getContext('2d');
-    const lineChart = new Chart(ctxLine, {
-        type: 'line',
-        data: {
-            labels: ['Tiempo 1', 'Tiempo 2', 'Tiempo 3', 'Tiempo 4', 'Tiempo 5', 'Tiempo 6', 'Tiempo 7'],
-            datasets: [{
-                label: 'Corriente en el tiempo',
-                data: currentData,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
-                fill: false
-            }]
-        },
-        options: {
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentData = [5, 10, 15, 20, 25, 30, 35];
+
+        // Configuración para todos los gráficos
+        const chartOptions = {
+            // Grafico donut
+            doughnut: {
+                type: 'doughnut',
+                data: {
+                    labels: ['Corriente 1', 'Corriente 2', 'Corriente 3', 'Corriente 4', 'Corriente 5', 'Corriente 6', 'Corriente 7'],
+                    datasets: [{
+                        data: currentData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(99, 255, 132, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(99, 255, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            },
+            // Grafico Linea
+            line: {
+                type: 'line',
+                data: {
+                    labels: ['Tiempo 1', 'Tiempo 2', 'Tiempo 3', 'Tiempo 4', 'Tiempo 5', 'Tiempo 6', 'Tiempo 7'],
+                    datasets: [{
+                        label: 'Corriente en el tiempo',
+                        data: currentData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                }
+            },
+            // Grafico Barras
+            bar: {
+                type: 'bar',
+                data: {
+                    labels: ['Corriente 1', 'Corriente 2', 'Corriente 3', 'Corriente 4', 'Corriente 5', 'Corriente 6', 'Corriente 7'],
+                    datasets: [{
+                        label: 'Mediciones de corriente',
+                        data: currentData,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(99, 255, 132, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(99, 255, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                }
+            }
+        };
+
+        // Configuración para los gráficos principales (con leyenda y etiquetas)
+        const mainChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 x: {
-                    beginAtZero: true
+                    display: true // Mostrar el eje X
                 },
                 y: {
-                    beginAtZero: true
+                    display: true // Mostrar el eje Y
                 }
-            }
-        }
-    });
-    
-    // 3. Gráfico de barras (Bar)
-    const ctxBar = document.getElementById('barChart').getContext('2d');
-    const barChart = new Chart(ctxBar, {
-        type: 'bar',
-        data: {
-            labels: ['Corriente 1', 'Corriente 2', 'Corriente 3', 'Corriente 4', 'Corriente 5', 'Corriente 6', 'Corriente 7'],
-            datasets: [{
-                label: 'Mediciones de corriente',
-                data: currentData,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)',
-                    'rgba(99, 255, 132, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)',
-                    'rgba(99, 255, 132, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+            },
+            plugins: {
+                legend: {
+                    display: true // Mostrar la leyenda
+                },
+                tooltip: {
+                    enabled: true // Habilitar el tooltip para el gráfico principal
                 }
+            },
+            animation: {
+                duration: 300 // Duración de la animación para el gráfico principal
             }
+        };
+
+        // Configuración básica para gráficos miniatura (sin leyenda, sin etiquetas)
+        const miniChartOptions = {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false // Ocultar la leyenda
+                },
+                tooltip: {
+                    enabled: false // Desactivar el tooltip (información emergente al pasar el ratón)
+                }
+            },
+            animation: {
+                duration: 1 // Desactivar las animaciones para los mini gráficos
+            }
+        };
+
+        // Crear las miniaturas (pequeños gráficos) con las opciones simplificadas
+        const miniDonaCtx = document.getElementById('miniDona').getContext('2d');
+        const miniDonaChart = new Chart(miniDonaCtx, {
+            ...chartOptions.doughnut,  // Usar configuración de la dona
+            options: miniChartOptions  // Aplicar las opciones de gráficos miniatura
+        });
+
+        const miniLineCtx = document.getElementById('miniLine').getContext('2d');
+        const miniLineChart = new Chart(miniLineCtx, {
+            ...chartOptions.line,  // Usar configuración de la línea
+            options: miniChartOptions  // Aplicar las opciones de gráficos miniatura
+        });
+
+        const miniBarCtx = document.getElementById('miniBar').getContext('2d');
+        const miniBarChart = new Chart(miniBarCtx, {
+            ...chartOptions.bar,  // Usar configuración de las barras
+            options: miniChartOptions  // Aplicar las opciones de gráficos miniatura
+        });
+
+        // Crear el gráfico principal con las opciones completas
+        const mainChartCtx = document.getElementById('mainChart').getContext('2d');
+        let mainChart = new Chart(mainChartCtx, {
+            ...chartOptions.doughnut, // Por defecto, muestra la dona
+            options: mainChartOptions  // Aplicar las opciones del gráfico principal
+        });
+
+        // Función para cambiar el gráfico principal
+        function changeMainChart(chartType) {
+            mainChart.destroy(); // Destruye el gráfico anterior
+            mainChart = new Chart(mainChartCtx, {
+                ...chartOptions[chartType], // Crea el nuevo gráfico
+                options: mainChartOptions  // Aplicar las opciones del gráfico principal
+            });
         }
+
+        // Eventos de clic para cambiar el gráfico principal
+        document.getElementById('miniDona').addEventListener('click', function() {
+            changeMainChart('doughnut');
+        });
+
+        document.getElementById('miniLine').addEventListener('click', function() {
+            changeMainChart('line');
+        });
+
+        document.getElementById('miniBar').addEventListener('click', function() {
+            changeMainChart('bar');
+        });
     });
-    </script>
+</script>
+
 {% endblock js %}
