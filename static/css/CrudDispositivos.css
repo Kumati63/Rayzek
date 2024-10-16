@@ -216,3 +216,41 @@
     padding: 20px; 
     box-sizing: border-box; 
 }
+
+
+
+form .form-group{
+    background: rgba(255, 200, 0, 0.895);
+    padding: 40px;
+    border-radius: 5px;
+    position: relative;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+form .form-control{
+    background: #faf9f7;
+    margin-bottom: 10px;
+}
+
+form .inside{
+    margin-top: 40px;
+    position: relative;
+    border: 1px solid #cbcbcb;
+}
+
+#btnSubmitDis{
+    background: rgba(80, 79, 77, 0.9);
+    color: #fff;
+    border: none;
+}
+
+#btnSubmitDis:hover{
+    background: rgba(54, 54, 54, 0.9);
+    color: #fff;
+    border: none;
+}
+
+form .btn:focus{
+    outline: none;
+}
