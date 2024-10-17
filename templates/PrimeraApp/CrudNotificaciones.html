@@ -2,11 +2,10 @@
 {% load static %}
 
 {% block contenido %}
-<div class="container mt-5">
-    <hr>
+<div class="container mt-5 CrudNotificaciones-maincontainer">
     <h2 class="text-white">Notificaciones</h2>
-    <table class="table table-bordered" style="background-color: #fff; color: black;">
-        <thead style="background-color: #343a40; ">
+    <table class="CrudNotificaciones-table table table-bordered" style="background-color: #fff; color: black;">
+        <thead style="color: black">
             <tr>
                 <th>ID</th>
                 <th>Alerta</th>
@@ -26,25 +25,25 @@
                 <td>
                     &nbsp;<img src="{% static 'img/delete.png' %}" alt="Delete">&nbsp;&nbsp;&nbsp;&nbsp;<img src="{% static 'img/update.png' %}" alt="Delete">
                 </td>
-            </tr>
+            </tr>   
             {% endfor %}
         </tbody>
     </table>
     </table>
-    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addNotificationModal">
+    <button type="CrudNotificaciones-btn-agregar" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addNotificationModal">
         Agregar Notificación
     </button>
     <!-- Modal -->
     <div class="modal fade" id="addNotificationModal" tabindex="-1" aria-labelledby="addNotificationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
+            <div class="CrudNotificaciones-modal-content modal-content">
+                <div class="CrudNotificaciones-modal-header modal-header">
                     <h5 class="modal-title" id="addNotificationModalLabel">Agregar Notificación</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" >
+                <div class="CrudNotificaciones-modal-body modal-body" >
                     <!-- Formulario para agregar una notificación envia los datos por POST al view-->
-                    <form id="addNotificationForm" method="POST"">
+                    <form id="addNotificationForm" method="POST">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="alerta" class="form-label">Alerta</label>
@@ -58,7 +57,7 @@
                             <label for="usuario" class="form-label">Usuario</label>
                             <input type="text" class="form-control" id="usuario" name="usuario" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <button type="submit" class="CrudNotificaciones-btn-guardar btn btn-primary">Guardar</button>
                     </form>
                 </div>
             </div>
