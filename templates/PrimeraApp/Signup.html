@@ -32,6 +32,8 @@
                     <div class="input-box">
                         <label for="email">Email</label><br>
                         <input type="email" placeholder="Ingresar Email" id="email" name="email" required><br>
+                        <p id="email-error" style="color: red; font-size: 13px; display: none;">Email no registrado</p>
+                        <p id="email-success" style="color: green; font-size: 13px; display: none;">Email disponible</p>
                     </div>
                 </div>
 
@@ -61,6 +63,17 @@
                         <div class="photos" id="imagePreview">
                             <!-- La imagen se mostrará aquí -->
                         </div>
+                    </div>
+                </div>
+
+                <div class="input-box-group"></div>
+                    <div class="input-box">
+                        <label for="roles">Rol</label><br>
+                        <select id="roles" name="roles" required>
+                            <option value="usu">Usuario</option>
+                            <option value="tec">Técnico</option>
+                            <option value="adm">Administrador</option>
+                        </select>
                     </div>
                 </div>
 

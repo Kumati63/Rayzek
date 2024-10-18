@@ -65,7 +65,7 @@ $(function() {
             if ($(this).val() !== $('#contrasena').val()) {
                 $(this).css("border-color", "red");
                 $('#contrasena').css("border-color", "red");
-                swal("Las contraseñas no coinciden");
+                swal("Las contraseñas deben coincidir");
             } else {
                 $(this).css("border-color", "white");
                 $('#contrasena').css("border-color", "white");
@@ -153,14 +153,17 @@ function validarSignup(){
         return false;
     }
 
-    if(document.form.contrasena.value!=document.form.contrasena2.value)
-    {
-        swal("Las contrasena deben ser iguales");
-        document.form.contrasena.value="";
-        document.form.contrasena2.value="";
-        document.form.contrasena.focus();
-        return false;
-    }
+    // Validar contraseñas al cambiar el segundo campo de contraseña
+    $('#contrasena2').on("blur", function() {
+        if ($(this).val() !== $('#contrasena').val()) {
+            $(this).css("border-color", "red");
+            $('#contrasena').css("border-color", "red");
+            swal("Las contraseñas deben coincidir");
+        } else {
+            $(this).css("border-color", "white");
+            $('#contrasena').css("border-color", "white");
+        }
+    });
 
     document.form.submit();
 }

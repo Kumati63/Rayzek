@@ -67,8 +67,15 @@ WSGI_APPLICATION = 'Tesis.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'rayzek',  # Nombre de la base de datos
+        'USER': 'AdminRayzek',  # Nombre del usuario
+        'PASSWORD': 'Rayzek123!',  # Contraseña del usuario
+        'HOST': 'localhost',  # Host de la base de datos
+        'PORT': '3306',  # Puerto por defecto de MySQL
+        'OPTION':{
+            'init_command':'SET sql_mode="STRICT_ALL_TABLES',
+        }
     }
 }
 
@@ -109,6 +116,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

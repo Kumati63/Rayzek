@@ -1,110 +1,22 @@
+
 from django.db import models
 from datetime import datetime
+from django.core.validators import MinLengthValidator
+from primeraApp.choises import roles
 
-# Create your models here.
-usuarios = {
-    1: {
-        "id": 1,
-        "nombre": "Marcelo",
-        "email": "marcelo@a.com",
-        "contrasena": "qwerty",
-        "tipo": "administrador"
-    },
-    2: {
-        "id": 2,
-        "nombre": "Jeff",
-        "email": "jeff@a.com",
-        "contrasena": "qwerty",
-        "tipo": "usuario"
-    },
-    3: {
-        "id": 3,
-        "nombre": "Matias",
-        "email": "matias@a.com",
-        "contrasena": "qwerty",
-        "tipo": "tecnico"
-    }
-}
+class Usuario(models.Model):
+    nombre = models.CharField(max_length=255,verbose_name="Nombre del usuario")
+    email = models.EmailField(max_length=255, unique=True)
+    contraseña = models.CharField(max_length=255)
+    imgPerfil = models.ImageField(upload_to='imgPerfil/', null=True, blank=True)
+    roles = models.CharField(max_length=3, validators=[MinLengthValidator(3)],choices=roles,default='usu',verbose_name="roles del usuario")
+    estado = models.IntegerField()
 
-# 1 equivale a encendido y 2 a apagado
-
-dispositivos = {
-    1: {
-        "id": 1,
-        "Dispositivo": "Luz Sala",
-        "Ubicacion": "Sala 2do piso",
-        "tipo": "luz",
-        "UmbralConsumo": 0
-    },
-    2: {
-        "id": 2,
-        "Dispositivo": "Luz Cocina",
-        "Ubicacion": "Cocina",
-        "tipo": "luz",
-        "UmbralConsumo": 0
-    },
-    3: {
-        "id": 3,
-        "Dispositivo": "Televisor",
-        "Ubicacion": "living",
-        "tipo": "tv",
-        "UmbralConsumo": 0
-    }
-}
-
-alertas = {
-    1: {
-        "id": 1,
-        "alerta": "Consumo alto",
-        "timestamp": datetime.now(),
-        "usuario": "Marcelo"
-    },
-    2: {
-        "id": 2,
-        "alerta": "Dispositivo apagado",
-        "timestamp": datetime.now(),
-        "usuario": "Jeff"
-    },
-    3: {
-        "id": 3,
-        "alerta": "Consumo bajo",
-        "timestamp": datetime.now(),
-        "usuario": "Matias"
-    }
-}
-
-mediciones = {
-    1: {
-        "id": 1,
-        "dispositivo": "Luz Sala",
-        "timestamp": datetime.now(),
-        "consumo": 15.5
-    },
-    2: {
-        "id": 2,
-        "dispositivo": "Luz Cocina",
-        "timestamp": datetime.now(),
-        "consumo": 10.2
-    },
-    3: {
-        "id": 3,
-        "dispositivo": "Televisor",
-        "timestamp": datetime.now(),
-        "consumo": 25.3
-    }
-}
-
-Tipo_usuario = {
-    1: {
-        "id":1,
-        "Tipo":"Administrador"
-    },
-    2: {
-        "id":2,
-        "Tipo":"Usuario"
-    },
-    3: {
-        "id":3,
-        "Tipo":"tecnico"
-    }
-}
+    def __str__(self):
+        return f"{self.nombre}"
+    
+    class Meta:
+        db_table = 'usuario'
+        managed = True
+        verbose_name = 'usuario'
+        verbose_name_plural = 'usuarios'
