@@ -71,6 +71,9 @@ def CrudDispositivos(request):
 def CrudInvitaciones(request):
     return render(request,'PrimeraApp\CrudInvitaciones.html')
 
+def CrudMiembros(request):
+    return render(request,'PrimeraApp\CrudMiembros.html')
+
 def wattsGraphs(request):
     return render(request,'PrimeraApp\wattsGraphs.html')
 

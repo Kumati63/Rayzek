@@ -31,8 +31,11 @@
                             <option value="clave">{{valor.Tipo}}</option>
                             {% endfor %}
                           </select>
-                          
                         <br>
+                        <label for="qr">O use un codigo QR:</label>
+                        <br>
+                        <img name= "qr" id="qr" src="{% static 'img/qr.png' %}" width="150" alt="Qr">
+                          <br>
                           <br>
                           <button type="submit" class="btn btn-primary" style="box-shadow: 5px 5px 5px black;">Enviar</button>
                           <br>
@@ -45,81 +48,6 @@
               <div class="col-3">
               </div>
               <div class="col-9">
-                  <div class="custom-container">
-                      <div class="row">
-                          <div class="col-md-11 mx-auto" id="DisContainer">
-                              <div class="panel">
-                                  <div class="panel-heading">
-                                      <div class="row">
-                                          <div class="col col-sm-3 col-xs-12">
-                                              <h4 class="title">Data <span>List</span></h4>
-                                          </div>
-                                          <div class="col-sm-9 col-xs-12 text-right">
-                                              <div class="btn_group">
-                                                  <input type="text" class="form-control" placeholder="Search">
-                                                  <button class="btn btn-default" title="Reload"><i
-                                                          class="fa fa-sync-alt"></i></button>
-                                                  <button class="btn btn-default" title="Pdf"><i class="fa fa-file-pdf"></i></button>
-                                                  <button class="btn btn-default" title="Excel"><i
-                                                          class="fas fa-file-excel"></i></button>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div class="panel-body table-responsive">
-                                      <table class="table">
-                                          <thead>
-                                              <tr>
-                                                  <th>#</th>
-                                                  <th>Nombre Completo</th>
-                                                  <th>Correo electronico</th> 
-                                                  <th>tipo</th> 
-                                                  <th>Action</th>
-                                              </tr>
-                                          </thead>
-                                          <tbody>
-                                              <!-- Iterar el diccionario de dispositivos para mostrarlo en la tabla -->
-                                              {% for clave, valor in usuarios.items %}
-                                                  <tr>
-                                                      <td>{{ valor.id }}</td>
-                                                      <td>{{ valor.nombre }}</td>
-                                                      <td>{{ valor.email }}</td>
-                                                      <td>{{ valor.tipo}}</td> 
-                                                      <td>
-                                                          <ul class="action-list">
-                                                              <li><a href="#" data-tip="edit"><i class="fa fa-edit"></i></a>
-                                                              </li>
-                                                              <li><a href="#" data-tip="delete"><i class="fa fa-trash"></i></a>
-                                                              </li>
-                                                          </ul>
-                                                      </td>
-                                                  </tr>
-                                              {% endfor %}
-                                          </tbody>
-                                      </table>
-                                  </div>
-                                  <div class="panel-footer">
-                                      <div class="row">
-                                          <div class="col col-sm-6 col-xs-6">showing <b>5</b> out of <b>25</b> entries
-                                          </div>
-                                          <div class="col-sm-6 col-xs-6">
-                                              <ul class="pagination hidden-xs pull-right">
-                                                  <li><a href="#"><i class='bx bxs-chevrons-left'></i></a></li>
-                                                  <li><a href="#">1</a></li>
-                                                  <li><a href="#">2</a></li>
-                                                  <li><a href="#">3</a></li>
-                                                  <li><a href="#">4</a></li>
-                                                  <li><a href="#">5</a></li>
-                                                  <li><a href="#"><i class='bx bxs-chevrons-right'></i></a></li>
-                                              </ul>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                  </div>
               </div>
           </div>
           <div class="col-1">
