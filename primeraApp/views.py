@@ -3,13 +3,16 @@ from django.http import HttpResponse
 from datetime import datetime
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
-from primeraApp.models import Usuario
+from .models import Usuario
 from django.contrib.auth.hashers import check_password
+from .decorators import login_required_custom
+from django.contrib.auth import logout
+
 
 # Create your views here.
 def landingPage(request):
     
-    return render(request,'PrimeraApp\LandingPage.html')
+    return render(request,'PrimeraApp/LandingPage.html')
 
 def Login(request):
     if request.method == 'POST':
@@ -20,18 +23,40 @@ def Login(request):
             # Verificar si el email existe
             user = Usuario.objects.get(email=email)
 
+            # Obtener o inicializar el contador de intentos fallidos en la sesión
+            failed_attempts = request.session.get(f'failed_attempts_{email}', 0)
+
+            # Si la cuenta está activa y los intentos fallidos llegaron a 3, reiniciar contador
+            if user.estado == 1 and failed_attempts >= 3:
+                request.session[f'failed_attempts_{email}'] = 0
+                failed_attempts = 0  # Reiniciar el contador si la cuenta está desbloqueada
+
             # Usar check_password para verificar la contraseña hasheada
             if check_password(password, user.contraseña):  # Validar la contraseña
-            
+                # Si la cuenta está activa y la contraseña es correcta
                 if user.estado == 1:
+                    # Reiniciar el contador de intentos fallidos al iniciar sesión correctamente
+                    request.session[f'failed_attempts_{email}'] = 0
                     # Iniciar sesión manualmente guardando el usuario en la sesión
                     request.session['usuario_id'] = user.id
                     return redirect('Menu')
+
             else:
-                messages.error(request, 'Contraseña incorrecta')
+                # Incrementar el contador de intentos fallidos si la contraseña es incorrecta
+                failed_attempts += 1
+                request.session[f'failed_attempts_{email}'] = failed_attempts
+
+                if failed_attempts == 3:
+                    # Bloquear la cuenta usando update()
+                    Usuario.objects.filter(email=email).update(estado=0)
+                    messages.error(request, 'Cuenta bloqueada por múltiples intentos fallidos')
+                else:
+                    remaining_attempts = 3 - failed_attempts
+                    messages.error(request, f'Contraseña incorrecta. Intentos restantes: {remaining_attempts}')
+
         except Usuario.DoesNotExist:
             messages.error(request, 'Email no registrado')
-    
+
     return render(request, 'PrimeraApp/Login.html')
 
 def Signup(request):
@@ -61,25 +86,50 @@ def Signup(request):
 
     return render(request, 'PrimeraApp/Signup.html')
 
+@login_required_custom
 def main(request):
-    return render(request,'PrimeraApp\main.html')
+    usuario_id = request.session['usuario_id']
+    
+    if not usuario_id:
+        return redirect('Login')
+    
+    try:
+        # Intenta recuperar al usuario actual de la base de datos usando el ID de la sesión
+        usuario = Usuario.objects.get(id=usuario_id)
+    except Usuario.DoesNotExist:
+        # Si el usuario no existe, forzar el cierre de sesión y redirigir a la página de login
+        del request.session['usuario_id']
+        return redirect('Login')
+    
+    # Mostrar la vista del menú solo si el usuario existe y está autenticado
+    return render(request,'PrimeraApp/main.html', {'usuario': usuario})
 
+@login_required_custom
 def CrudDispositivos(request):
     
-    return render(request,'PrimeraApp\CrudDispositivos.html')
+    return render(request,'PrimeraApp/CrudDispositivos.html')
 
+@login_required_custom
 def CrudInvitaciones(request):
-    return render(request,'PrimeraApp\CrudInvitaciones.html')
+    return render(request,'PrimeraApp/CrudInvitaciones.html')
 
+@login_required_custom
 def CrudMiembros(request):
-    return render(request,'PrimeraApp\CrudMiembros.html')
+    return render(request,'PrimeraApp/CrudMiembros.html')
 
+@login_required_custom
 def wattsGraphs(request):
-    return render(request,'PrimeraApp\wattsGraphs.html')
+    return render(request,'PrimeraApp/wattsGraphs.html')
 
+@login_required_custom
 def CrudNotificaciones(request):
-    return render(request,'PrimeraApp\CrudNotificaciones.html')
+    return render(request,'PrimeraApp/CrudNotificaciones.html')
 
+@login_required_custom
 def Menu(request):
-    return render(request,'PrimeraApp\Menu.html')
+    return render(request,'PrimeraApp/Menu.html')
 
+def logout_view(request):
+    # Cerrar la sesión del usuario
+    logout(request)  # Esto elimina la información de la sesión del usuario
+    return redirect('Login')  # Redirigir a la página de inicio de sesión
