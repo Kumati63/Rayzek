@@ -5,7 +5,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from .models import Usuario
 from django.contrib.auth.hashers import check_password
-from .decorators import login_required_custom
+from .decorators import login_required_custom # metodo que verifica el estado de la sesión
 from django.contrib.auth import logout
 
 
@@ -23,17 +23,17 @@ def Login(request):
             # Verificar si el email existe
             user = Usuario.objects.get(email=email)
 
-            # Obtener o inicializar el contador de intentos fallidos en la sesión
+            # Obtener el contador de intentos fallidos
             failed_attempts = request.session.get(f'failed_attempts_{email}', 0)
 
-            # Si la cuenta está activa y los intentos fallidos llegaron a 3, reiniciar contador
+            # Si la cuenta está activa y los intentos fallidos son 3, reiniciar contador
             if user.estado == 1 and failed_attempts >= 3:
                 request.session[f'failed_attempts_{email}'] = 0
                 failed_attempts = 0  # Reiniciar el contador si la cuenta está desbloqueada
 
             # Usar check_password para verificar la contraseña hasheada
             if check_password(password, user.contraseña):  # Validar la contraseña
-                # Si la cuenta está activa y la contraseña es correcta
+                # Verificar si la cuenta está activa
                 if user.estado == 1:
                     # Reiniciar el contador de intentos fallidos al iniciar sesión correctamente
                     request.session[f'failed_attempts_{email}'] = 0
@@ -88,21 +88,8 @@ def Signup(request):
 
 @login_required_custom
 def main(request):
-    usuario_id = request.session['usuario_id']
     
-    if not usuario_id:
-        return redirect('Login')
-    
-    try:
-        # Intenta recuperar al usuario actual de la base de datos usando el ID de la sesión
-        usuario = Usuario.objects.get(id=usuario_id)
-    except Usuario.DoesNotExist:
-        # Si el usuario no existe, forzar el cierre de sesión y redirigir a la página de login
-        del request.session['usuario_id']
-        return redirect('Login')
-    
-    # Mostrar la vista del menú solo si el usuario existe y está autenticado
-    return render(request,'PrimeraApp/main.html', {'usuario': usuario})
+    return render(request,'PrimeraApp/main.html')
 
 @login_required_custom
 def CrudDispositivos(request):
@@ -127,7 +114,17 @@ def CrudNotificaciones(request):
 
 @login_required_custom
 def Menu(request):
-    return render(request,'PrimeraApp/Menu.html')
+    usuario_id = request.session.get('usuario_id')
+
+    if not usuario_id:
+        return redirect('Login')
+
+    try:
+        usuario = Usuario.objects.get(id=usuario_id)
+    except Usuario.DoesNotExist:
+        del request.session['usuario_id']
+        return redirect('Login')
+    return render(request,'PrimeraApp/Menu.html', {'usuario': usuario})
 
 def logout_view(request):
     # Cerrar la sesión del usuario
