@@ -68,7 +68,7 @@ def Signup(request):
         contrasena = request.POST['contrasena']
         contrasena2 = request.POST['contrasena2']
         imgPerfil = request.FILES.get('File', None)
-        rol = 'usu'  # Obtén el rol del formulario
+        rol = 'usu'  # se establece el rol de usuario por defecto
 
         # Crear el usuario
         usuario = Usuario(
@@ -77,7 +77,8 @@ def Signup(request):
             contraseña=make_password(contrasena),  # Encriptar la contraseña
             imgPerfil=imgPerfil,
             estado=1,  # Puedes asignar un valor por defecto al estado
-            roles=rol
+            roles=rol,
+            casa=None  # No asignar ninguna casa inicialmente
         )
         usuario.save()
 
