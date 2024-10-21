@@ -68,7 +68,7 @@ def Signup(request):
         contrasena = request.POST['contrasena']
         contrasena2 = request.POST['contrasena2']
         imgPerfil = request.FILES.get('File', None)
-        rol = request.POST.get('roles')  # Obtén el rol del formulario
+        rol = 'usu'  # Obtén el rol del formulario
 
         # Crear el usuario
         usuario = Usuario(
@@ -121,9 +121,15 @@ def Menu(request):
 
     try:
         usuario = Usuario.objects.get(id=usuario_id)
+        print(f"Usuario recuperado: {usuario}")
+        print(f"Nombre del usuario: {usuario.nombre}")
+        print(f"Email del usuario: {usuario.email}")
+        print(f"Rol del usuario: {usuario.roles}")
+        
     except Usuario.DoesNotExist:
         del request.session['usuario_id']
         return redirect('Login')
+    
     return render(request,'PrimeraApp/Menu.html', {'usuario': usuario})
 
 def logout_view(request):
