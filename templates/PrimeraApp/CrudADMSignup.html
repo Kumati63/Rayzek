@@ -3,10 +3,10 @@
 <!-- Bloque para el contenido principal de la página -->
 {% block contenido %}
 <section class="page-section" id="DisDisplay">
+    
+    <!-- Contenido visible solo para administradores (rol 'adm') -->
+    {% if usuario.roles == 'adm' %}
     <div class="container">
-
-        <!-- Contenido visible solo para administradores (rol 'adm') -->
-        {% if usuario.roles == 'adm' %}
         <div id="btnNuevoDis" style="margin-top: 30px;">
             <a class="btn btn-primary btn-xl text-uppercase" id="btnDispositivo" href="#">Agregar Dispositivo</a>
         </div>
@@ -73,37 +73,58 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Dispositivo</th>
-                                    <th>Ubicación</th>
-                                    <th>Tipo de Dispositivo</th>
+                                    <th>Img Perfil</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Estado</th>
+                                    <th>Rol</th>
+                                    <th>Casa_id</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- Iterar el diccionario de dispositivos para mostrarlo en la tabla -->
-                                {% for clave, valor in dispositivos.items %}
-                                    <tr>
-                                        <td>{{ valor.id }}</td>
-                                        <td>{{ valor.Dispositivo }}</td>
-                                        <td>{{ valor.Ubicacion }}</td>
-                                        <td>{{ valor.tipo }}</td>
-                                        <td>
-                                            <ul class="action-list">
-                                                <li><a href="#" data-tip="edit"><i class="fa fa-edit"></i></a>
-                                                </li>
-                                                <li><a href="#" data-tip="delete"><i class="fa fa-trash"></i></a>
-                                                </li>
-                                            </ul>
-                                        </td>
-                                    </tr>
+                                {% for usuario in tablaUsuarios %}
+                                <tr>
+                                    <td>{{ usuario.id }}</td>
+                                    <td>
+                                        {% if usuario.imgPerfil %}
+                                            <img src="{{ usuario.imgPerfil.url }}" alt="Imagen de perfil" style="width: 50px; height: auto;">
+                                        {% else %}
+                                            <img src="{% static 'img/shit.png' %}" alt="Imagen de perfil" style="width: 50px; height: auto;">
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ usuario.nombre }}</td>
+                                    <td>{{ usuario.email }}</td>
+                                    <td>{{ usuario.estado  }}</td>
+                                    <td>{{ usuario.roles }}</td>
+                                    <td>
+                                        {% if usuario.casa %}
+                                            {{ usuario.casa.nombre }}
+                                        {% else %}
+                                            <p>Sin Casa</p>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <ul class="action-list">
+                                            <li>
+                                                <a href="#" data-tip="edit"><i class="fa fa-edit"></i></a>
+                                            </li>
+                                            <li>
+                                                <a href="#" data-tip="delete" onclick="confirmarEliminacion({{ usuario.id }}); return false;">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
                     <div class="panel-footer">
                         <div class="row">
-                            <div class="col col-sm-6 col-xs-6">showing <b>5</b> out of <b>25</b> entries
-                            </div>
+                            <div class="col col-sm-6 col-xs-6">showing <b>{{ usuarios|length }}</b> out of <b>25</b> entries</div>
                             <div class="col-sm-6 col-xs-6">
                                 <ul class="pagination hidden-xs pull-right">
                                     <li><a href="#"><i class='bx bxs-chevrons-left'></i></a></li>
@@ -121,6 +142,9 @@
             </div>
         </div>
     </div>
+    {% else %}
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <h1 style="font-size: 3em; ">no eres administrador</h1>
     </div>
     {% endif %}
 </section>
@@ -133,5 +157,12 @@
 
 <!-- Bloque para el JavaScript de la página -->
 {% block js %}
-
+<script>
+    function confirmarEliminacion(usuarioId) {
+        if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+            // Redirigir a la URL de eliminación
+            window.location.href = "{% url 'eliminar_usuario' 0 %}".replace('0', usuarioId);
+        }
+    }
+</script>
 {% endblock js %}

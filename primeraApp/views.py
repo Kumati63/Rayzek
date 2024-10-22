@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from datetime import datetime
 from django.contrib.auth.hashers import make_password
@@ -94,24 +94,78 @@ def main(request):
 
 @login_required_custom
 def CrudDispositivos(request):
-    
-    return render(request,'PrimeraApp/CrudDispositivos.html')
+    usuario_id = request.session.get('usuario_id')
+
+    if not usuario_id:
+        return redirect('Login')
+
+    try:
+        usuario = Usuario.objects.get(id=usuario_id)
+        
+    except Usuario.DoesNotExist:
+        del request.session['usuario_id']
+        return redirect('Login')
+    return render(request,'PrimeraApp/CrudDispositivos.html', {'usuario': usuario})
 
 @login_required_custom
 def CrudInvitaciones(request):
-    return render(request,'PrimeraApp/CrudInvitaciones.html')
+    usuario_id = request.session.get('usuario_id')
+
+    if not usuario_id:
+        return redirect('Login')
+
+    try:
+        usuario = Usuario.objects.get(id=usuario_id)
+        
+    except Usuario.DoesNotExist:
+        del request.session['usuario_id']
+        return redirect('Login')
+    return render(request,'PrimeraApp/CrudInvitaciones.html', {'usuario': usuario})
 
 @login_required_custom
 def CrudMiembros(request):
-    return render(request,'PrimeraApp/CrudMiembros.html')
+    usuario_id = request.session.get('usuario_id')
+
+    if not usuario_id:
+        return redirect('Login')
+
+    try:
+        usuario = Usuario.objects.get(id=usuario_id)
+        
+    except Usuario.DoesNotExist:
+        del request.session['usuario_id']
+        return redirect('Login')
+    return render(request,'PrimeraApp/CrudMiembros.html', {'usuario': usuario})
 
 @login_required_custom
 def wattsGraphs(request):
-    return render(request,'PrimeraApp/wattsGraphs.html')
+    usuario_id = request.session.get('usuario_id')
+
+    if not usuario_id:
+        return redirect('Login')
+
+    try:
+        usuario = Usuario.objects.get(id=usuario_id)
+        
+    except Usuario.DoesNotExist:
+        del request.session['usuario_id']
+        return redirect('Login')
+    return render(request,'PrimeraApp/wattsGraphs.html', {'usuario': usuario})
 
 @login_required_custom
 def CrudNotificaciones(request):
-    return render(request,'PrimeraApp/CrudNotificaciones.html')
+    usuario_id = request.session.get('usuario_id')
+
+    if not usuario_id:
+        return redirect('Login')
+
+    try:
+        usuario = Usuario.objects.get(id=usuario_id)
+        
+    except Usuario.DoesNotExist:
+        del request.session['usuario_id']
+        return redirect('Login')
+    return render(request,'PrimeraApp/CrudNotificaciones.html', {'usuario': usuario})
 
 @login_required_custom
 def Menu(request):
@@ -146,9 +200,20 @@ def CrudADMSignup(request):
         # Verificar si el rol del usuario es 'adm'
         if usuario.roles != 'adm':
             return redirect('Menu')
-
+        
+        # Obtener todos los usuarios
+        tablaUsuarios = Usuario.objects.all()
         
     except Usuario.DoesNotExist:
         del request.session['usuario_id']
         return redirect('Login')
-    return render(request,'PrimeraApp/CrudADMSignup.html')
+    return render(request,'PrimeraApp/CrudADMSignup.html', {'usuario': usuario, 'tablaUsuarios': tablaUsuarios})
+
+def eliminar_usuario(request, usuario_id):
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+    # Eliminar el usuario
+    usuario.delete()
+
+    # Redirigir de vuelta a la lista de usuarios
+    return redirect('CrudADMSignup')
