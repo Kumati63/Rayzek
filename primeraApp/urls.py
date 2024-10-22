@@ -15,4 +15,5 @@ urlpatterns = [
     path('wattsGraphs/', views.wattsGraphs,name='wattsGraphs'),
     path('CrudMiembros/', views.CrudMiembros,name='CrudMiembros'),
     path('logout/', logout_view, name='logout'),  # URL para cerrar sesión
+    path('CrudADMSignup/', views.CrudADMSignup,name='CrudADMSignup'),
 ]

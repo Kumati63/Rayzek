@@ -122,10 +122,6 @@ def Menu(request):
 
     try:
         usuario = Usuario.objects.get(id=usuario_id)
-        print(f"Usuario recuperado: {usuario}")
-        print(f"Nombre del usuario: {usuario.nombre}")
-        print(f"Email del usuario: {usuario.email}")
-        print(f"Rol del usuario: {usuario.roles}")
         
     except Usuario.DoesNotExist:
         del request.session['usuario_id']
@@ -137,3 +133,17 @@ def logout_view(request):
     # Cerrar la sesión del usuario
     logout(request)  # Esto elimina la información de la sesión del usuario
     return redirect('Login')  # Redirigir a la página de inicio de sesión
+
+def CrudADMSignup(request):
+    usuario_id = request.session.get('usuario_id')
+
+    if not usuario_id:
+        return redirect('Login')
+
+    try:
+        usuario = Usuario.objects.get(id=usuario_id)
+        
+    except Usuario.DoesNotExist:
+        del request.session['usuario_id']
+        return redirect('Login')
+    return render(request,'PrimeraApp/CrudADMSignup.html')

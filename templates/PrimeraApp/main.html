@@ -77,9 +77,23 @@
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/CrudDispositivos/">Gestion de dispositivos</a>
                   </li>
+                  <!-- Contenido visible solo para administradores (rol 'adm') -->
+                  {% if usuario.roles == 'adm' %}
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                      ADMINISTRADORES
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                      <li><a class="dropdown-item" href="/CrudInvitaciones/">Administrar Usuarios</a></li>
+                    </ul>
+                  </li>
+                  {% endif %}
                 </ul>
               </div>
             </div>
+
+
             <!-- Display for the Menu Of The User -->
             <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="UserMenu"
               aria-labelledby="offcanvasDarkNavbarLabel">

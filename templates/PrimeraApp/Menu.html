@@ -2,10 +2,14 @@
 
 {% block contenido %}
     <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-        <h1 style="font-size: 3em; ">Bienvenido, {{ usuario.nombre }}</h1>
-        <br>
-
-        <p>{{ usuario.email }}</p>
+        {% if usuario.roles == 'adm' %}
+            <!-- Mostrar contenido exclusivo para administradores -->
+            <h1 style="font-size: 3em; ">Bienvenido Administrador,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ usuario.nombre }}</h1>
+        {% else %}
+            <!-- Mostrar contenido para usuarios normales -->
+            <h1 style="font-size: 3em; ">Bienvenido, {{ usuario.nombre }}</h1>
+        {% endif %}
     </div>
 {% endblock contenido %}
 
