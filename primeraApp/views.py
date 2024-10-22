@@ -143,6 +143,11 @@ def CrudADMSignup(request):
     try:
         usuario = Usuario.objects.get(id=usuario_id)
         
+        # Verificar si el rol del usuario es 'adm'
+        if usuario.roles != 'adm':
+            return redirect('Menu')
+
+        
     except Usuario.DoesNotExist:
         del request.session['usuario_id']
         return redirect('Login')
