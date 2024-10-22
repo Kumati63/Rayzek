@@ -7,7 +7,6 @@ from primeraApp.choises import roles
 class Casa(models.Model):
     nombre = models.CharField(max_length=255, verbose_name="Nombre del grupo")
     codigo = models.CharField(max_length=10, unique=True, verbose_name="Código del grupo")
-    direccion = models.CharField(max_length=255, null=True, blank=True)
     
     def __str__(self):
         return self.nombre
