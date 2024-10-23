@@ -10,7 +10,7 @@
         object-fit: contain; /* Ajusta la imagen dentro del área sin recortar */
         object-position: center; /* Centra la imagen en el contenedor */
     }
-  </style>
+    </style>
 {% endblock styles %}
 
 <!-- Bloque para el contenido principal de la página -->
@@ -137,7 +137,19 @@
                                         </td>
                                         <td>{{ usuario.nombre }}</td>
                                         <td>{{ usuario.email }}</td>
-                                        <td>{{ usuario.estado  }}</td>
+                                        <td>
+                                            <a href="{% url 'cambiar_estado' usuario.id %}">
+                                                {% if usuario.estado == 1 %}
+                                                    <img src="{% static 'img/ACTIVO.png' %}" 
+                                                         alt="Estado" 
+                                                         style="cursor: pointer; width: 80px">
+                                                {% else %}
+                                                    <img src="{% static 'img/INACTIVO.png' %}" 
+                                                         alt="Estado" 
+                                                         style="cursor: pointer; width: 80px">
+                                                {% endif %}
+                                            </a>
+                                        </td>
                                         <td>{{ usuario.roles }}</td>
                                         <td>
                                             {% if usuario.casa %}

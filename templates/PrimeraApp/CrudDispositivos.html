@@ -34,9 +34,10 @@
                             </div>
                             <div class="form-group">
                                 <label for="medidor">Medidor</label>
-                                <select name="medidor" class="form-control" required>
+                                <select name="medidor" class="form-control">
+                                    <option value="">-- Seleccione un medidor --</option>
                                     {% for medidor in medidores %}
-                                        <option value="{{ medidor.id }}">{{ medidor.nombre }}</option>
+                                        <option value="{{ medidor.id }}">{{ medidor.identificador }} - {{ medidor.casa.nombre }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -76,20 +77,22 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Dispositivo</th>
+                                        <th>nombre</th>
                                         <th>Ubicación</th>
                                         <th>Tipo de Dispositivo</th>
+                                        <th>Casa</th>
                                         <th>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <!-- Iterar el diccionario de dispositivos -->
-                                    {% for clave, valor in dispositivos.items %}
+                                    {% for dispositivo in dispositivos %}
                                     <tr>
-                                        <td>{{ valor.id }}</td>
-                                        <td>{{ valor.Dispositivo }}</td>
-                                        <td>{{ valor.Ubicacion }}</td>
-                                        <td>{{ valor.tipo }}</td>
+                                        <td>{{ dispositivo.id }}</td>
+                                        <td>{{ dispositivo.nombre }}</td>
+                                        <td>{{ dispositivo.ubicacion }}</td>
+                                        <td>{{ dispositivo.tipo }}</td>
+                                        <td>{{ dispositivo.casa_id }}</td>
                                         <td>
                                             <ul class="action-list">
                                                 <li><a href="#" data-tip="edit"><i class="fa fa-edit"></i></a></li>

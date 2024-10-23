@@ -105,25 +105,39 @@ def CrudDispositivos(request):
         del request.session['usuario_id']
         return redirect('Login')
 
+    # Obtener dispositivos del usuario
     dispositivos = Dispositivo.objects.filter(casa=usuario.casa)
+    
+    # Obtener medidores asociados a la casa del usuario
+    medidores = Medidor.objects.filter(casa=usuario.casa)
 
     if request.method == 'POST':
         if 'agregar' in request.POST:
-            # Obtener datos del formulario
             nombre = request.POST.get('nombre')
             ubicacion = request.POST.get('ubicacion')
             tipo = request.POST.get('tipo')
-
-            medidores = Medidor.objects.filter(casa=usuario.casa)
+            medidor_id = request.POST.get('medidor')  # Obtener el ID del medidor seleccionado
             
-            # Obtener la casa del usuario
-            casa = usuario.casa  # Asegúrate de que esto esté correcto
-            medidor = None  # Cambia esto según tu lógica, o usa otro campo como sea necesario
+            casa = usuario.casa
             
-            # Crear y guardar el nuevo dispositivo
-            dispositivo = Dispositivo(nombre=nombre, medidor=medidor, casa=casa)
-            dispositivo.save()  # Asegúrate de que esto se ejecute sin errores
-            messages.success(request, 'Dispositivo agregado exitosamente.')
+            try:
+                # Obtener el medidor seleccionado
+                medidor = Medidor.objects.get(id=medidor_id) if medidor_id else None
+                
+                # Crear y guardar el nuevo dispositivo
+                dispositivo = Dispositivo(
+                    nombre=nombre,
+                    ubicacion=ubicacion,
+                    tipo=tipo,
+                    medidor=medidor,
+                    casa=casa
+                )
+                dispositivo.save()
+                messages.success(request, 'Dispositivo agregado exitosamente.')
+            except Medidor.DoesNotExist:
+                messages.error(request, 'El medidor seleccionado no existe.')
+            except Exception as e:
+                messages.error(request, f'Error al crear el dispositivo: {str(e)}')
 
         elif 'eliminar' in request.POST:
             dispositivo_id = request.POST.get('dispositivo_id')
@@ -131,7 +145,13 @@ def CrudDispositivos(request):
             dispositivo.delete()
             messages.success(request, 'Dispositivo eliminado exitosamente.')
 
-    return render(request, 'PrimeraApp/CrudDispositivos.html', {'usuario': usuario, 'dispositivos': dispositivos})
+    context = {
+        'usuario': usuario,
+        'dispositivos': dispositivos,
+        'medidores': medidores,  # Agregar medidores al contexto
+    }
+    
+    return render(request, 'PrimeraApp/CrudDispositivos.html', context)
 
 @login_required_custom
 def CrudInvitaciones(request):
@@ -254,7 +274,7 @@ def CrudADMSignup(request):
             usuario = Usuario(
                 nombre=nombre, 
                 email=email, 
-                contraseña=contraseña, 
+                contraseña=make_password(contraseña), 
                 imgPerfil=imagen_perfil,
                 casa=casa)
             usuario.save()
@@ -277,4 +297,34 @@ def eliminar_usuario(request, usuario_id):
     usuario.delete()
 
     # Redirigir de vuelta a la lista de usuarios
+    return redirect('CrudADMSignup')
+
+def cambiar_estado(request, usuario_id):
+    # Obtener el usuario autenticado desde la sesión
+    usuario_actual_id = request.session.get('usuario_id')
+    
+    # Verificar si el usuario está autenticado
+    if not usuario_actual_id:
+        return redirect('Login')
+    
+    # Obtener el usuario que está logueado
+    try:
+        usuario_actual = Usuario.objects.get(id=usuario_actual_id)
+    except Usuario.DoesNotExist:
+        del request.session['usuario_id']
+        return redirect('Login')
+
+    # Obtener el usuario que se quiere modificar
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+
+    # Verificar si es el usuario actual
+    if usuario.id == usuario_actual.id:
+        messages.error(request, "No puedes desactivar tu propio usuario.")
+        return redirect('CrudADMSignup')
+    
+    # Cambiar estado del usuario
+    nuevo_estado = 1 if usuario.estado == 0 else 0
+    Usuario.objects.filter(id=usuario_id).update(estado=nuevo_estado)
+    
+    messages.success(request, f"El estado del usuario {usuario.nombre} ha sido actualizado.")
     return redirect('CrudADMSignup')
