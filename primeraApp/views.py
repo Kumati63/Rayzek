@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from datetime import datetime
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
-from .models import Usuario, Casa, Medidor
+from .models import Usuario, Dispositivo, Casa, Medidor
 from django.contrib.auth.hashers import check_password
 from .decorators import login_required_custom # metodo que verifica el estado de la sesión
 from django.contrib.auth import logout
@@ -101,11 +101,37 @@ def CrudDispositivos(request):
 
     try:
         usuario = Usuario.objects.get(id=usuario_id)
-        
     except Usuario.DoesNotExist:
         del request.session['usuario_id']
         return redirect('Login')
-    return render(request,'PrimeraApp/CrudDispositivos.html', {'usuario': usuario})
+
+    dispositivos = Dispositivo.objects.filter(casa=usuario.casa)
+
+    if request.method == 'POST':
+        if 'agregar' in request.POST:
+            # Obtener datos del formulario
+            nombre = request.POST.get('nombre')
+            ubicacion = request.POST.get('ubicacion')
+            tipo = request.POST.get('tipo')
+
+            medidores = Medidor.objects.filter(casa=usuario.casa)
+            
+            # Obtener la casa del usuario
+            casa = usuario.casa  # Asegúrate de que esto esté correcto
+            medidor = None  # Cambia esto según tu lógica, o usa otro campo como sea necesario
+            
+            # Crear y guardar el nuevo dispositivo
+            dispositivo = Dispositivo(nombre=nombre, medidor=medidor, casa=casa)
+            dispositivo.save()  # Asegúrate de que esto se ejecute sin errores
+            messages.success(request, 'Dispositivo agregado exitosamente.')
+
+        elif 'eliminar' in request.POST:
+            dispositivo_id = request.POST.get('dispositivo_id')
+            dispositivo = get_object_or_404(Dispositivo, id=dispositivo_id)
+            dispositivo.delete()
+            messages.success(request, 'Dispositivo eliminado exitosamente.')
+
+    return render(request, 'PrimeraApp/CrudDispositivos.html', {'usuario': usuario, 'dispositivos': dispositivos})
 
 @login_required_custom
 def CrudInvitaciones(request):

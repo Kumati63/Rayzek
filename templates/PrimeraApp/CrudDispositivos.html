@@ -1,84 +1,90 @@
 {% extends "primeraApp/main.html" %}
 {% load static %}
-<!-- Bloque para el contenido principal de la página -->
 {% block contenido %}
 <section class="page-section" id="DisDisplay">
     <div class="container">
+
+        <!-- Botón para abrir el formulario de agregar dispositivo -->
         <div id="btnNuevoDis" style="margin-top: 30px;">
-            <a class="btn btn-primary btn-xl text-uppercase" id="btnDispositivo" href="#">Agregar Dispositivo</a>
+            <button class="btn btn-primary btn-xl text-uppercase" data-bs-toggle="modal" data-bs-target="#addDeviceModal">Agregar Dispositivo</button>
         </div>
 
-        <!-- Crud Dispositivos, debe aparecer una vez presionado el boton "Agregar Dispositivo" -->
-        <div class="container-fluid" id="NewDevices">
-            <div class="row">
-                <form>
-                    <div class="form-group">
-                        <label class=" control-label">Dispositivo</label>
-                        <input type="text" class="form-control">
-
-                        <label class=" control-label">Ubicación</label>
-                        <input type="text" class="form-control">
-
-                        <label class=" control-label">Tipo de Dispositivo</label>
-                        <input type="text" class="form-control">
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label class="control-label">**********</label>
-                                <input type="text" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="control-label">**********</label>
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                        <button type="submit" id="btnSubmitDis" class="btn btn-default"
-                            style="margin-top: 10px;">Submit</button>
+        <!-- Modal para agregar o editar dispositivos -->
+        <div class="modal fade" id="addDeviceModal" tabindex="-1" aria-labelledby="addDeviceModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addDeviceModalLabel">Agregar Dispositivo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-
-                </form>
+                    <div class="modal-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="nombre">Nombre del Dispositivo</label>
+                                <input type="text" name="nombre" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="ubicacion">Ubicación</label>
+                                <input type="text" name="ubicacion" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="tipo">Tipo de Dispositivo</label>
+                                <input type="text" name="tipo" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="medidor">Medidor</label>
+                                <select name="medidor" class="form-control" required>
+                                    {% for medidor in medidores %}
+                                        <option value="{{ medidor.id }}">{{ medidor.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" name="agregar" class="btn btn-primary">Agregar Dispositivo</button>
+                        </form>
+                        
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
-    <br>
+        <br>
 
-    <!-- Menu para mostrar los dispositivos ya agregados -->
-    <div class="custom-container">
-        <div class="row">
-            <div class="col-md-11 mx-auto" id="DisContainer">
-                <div class="panel">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col col-sm-3 col-xs-12">
-                                <h4 class="title">Data <span>List</span></h4>
-                            </div>
-                            <div class="col-sm-9 col-xs-12 text-right">
-                                <div class="btn_group">
-                                    <input type="text" class="form-control" placeholder="Search">
-                                    <button class="btn btn-default" title="Reload"><i
-                                            class="fa fa-sync-alt"></i></button>
-                                    <button class="btn btn-default" title="Pdf"><i class="fa fa-file-pdf"></i></button>
-                                    <button class="btn btn-default" title="Excel"><i
-                                            class="fas fa-file-excel"></i></button>
+        <!-- Lista de dispositivos -->
+        <div class="custom-container">
+            <div class="row">
+                <div class="col-md-11 mx-auto" id="DisContainer">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col col-sm-3 col-xs-12">
+                                    <h4 class="title">Lista de Dispositivos</h4>
+                                </div>
+                                <div class="col-sm-9 col-xs-12 text-right">
+                                    <div class="btn_group">
+                                        <input type="text" class="form-control d-inline-block w-50" placeholder="Buscar">
+                                        <button class="btn btn-default" title="Recargar"><i class="fa fa-sync-alt"></i></button>
+                                        <button class="btn btn-default" title="Pdf"><i class="fa fa-file-pdf"></i></button>
+                                        <button class="btn btn-default" title="Excel"><i class="fas fa-file-excel"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="panel-body table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Dispositivo</th>
-                                    <th>Ubicación</th>
-                                    <th>Tipo de Dispositivo</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Iterar el diccionario de dispositivos para mostrarlo en la tabla -->
-                                {% for clave, valor in dispositivos.items %}
+
+                        <div class="panel-body table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Dispositivo</th>
+                                        <th>Ubicación</th>
+                                        <th>Tipo de Dispositivo</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Iterar el diccionario de dispositivos -->
+                                    {% for clave, valor in dispositivos.items %}
                                     <tr>
                                         <td>{{ valor.id }}</td>
                                         <td>{{ valor.Dispositivo }}</td>
@@ -86,31 +92,30 @@
                                         <td>{{ valor.tipo }}</td>
                                         <td>
                                             <ul class="action-list">
-                                                <li><a href="#" data-tip="edit"><i class="fa fa-edit"></i></a>
-                                                </li>
-                                                <li><a href="#" data-tip="delete"><i class="fa fa-trash"></i></a>
-                                                </li>
+                                                <li><a href="#" data-tip="edit"><i class="fa fa-edit"></i></a></li>
+                                                <li><a href="#" data-tip="delete"><i class="fa fa-trash"></i></a></li>
                                             </ul>
                                         </td>
                                     </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="panel-footer">
-                        <div class="row">
-                            <div class="col col-sm-6 col-xs-6">showing <b>5</b> out of <b>25</b> entries
-                            </div>
-                            <div class="col-sm-6 col-xs-6">
-                                <ul class="pagination hidden-xs pull-right">
-                                    <li><a href="#"><i class='bx bxs-chevrons-left'></i></a></li>
-                                    <li><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">4</a></li>
-                                    <li><a href="#">5</a></li>
-                                    <li><a href="#"><i class='bx bxs-chevrons-right'></i></a></li>
-                                </ul>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col col-sm-6 col-xs-6">Mostrando <b>5</b> de <b>25</b> entradas</div>
+                                <div class="col-sm-6 col-xs-6">
+                                    <ul class="pagination hidden-xs pull-right">
+                                        <li><a href="#"><i class='bx bxs-chevrons-left'></i></a></li>
+                                        <li><a href="#">1</a></li>
+                                        <li><a href="#">2</a></li>
+                                        <li><a href="#">3</a></li>
+                                        <li><a href="#">4</a></li>
+                                        <li><a href="#">5</a></li>
+                                        <li><a href="#"><i class='bx bxs-chevrons-right'></i></a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -118,16 +123,9 @@
             </div>
         </div>
     </div>
-    </div>
 </section>
 {% endblock contenido %}
 
-<!-- Bloque para el footer de página -->
-{% block footer %}
-
-{% endblock footer %}
-
-<!-- Bloque para el JavaScript de la página -->
 {% block js %}
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock js %}
