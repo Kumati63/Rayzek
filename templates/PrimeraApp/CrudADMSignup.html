@@ -1,153 +1,189 @@
 {% extends "primeraApp/main.html" %}
 {% load static %}
+
+{% block styles %}
+<!-- Aquí puedes agregar estilos adicionales -->
+    <style>
+    #imagePreview img {
+        width: 100%;        /* Ajusta el ancho de la imagen al contenedor */
+        height: 100%;       /* Ajusta la altura de la imagen al contenedor */
+        object-fit: contain; /* Ajusta la imagen dentro del área sin recortar */
+        object-position: center; /* Centra la imagen en el contenedor */
+    }
+  </style>
+{% endblock styles %}
+
 <!-- Bloque para el contenido principal de la página -->
 {% block contenido %}
-<section class="page-section" id="DisDisplay">
-    
-    <!-- Contenido visible solo para administradores (rol 'adm') -->
-    {% if usuario.roles == 'adm' %}
-    <div class="container">
-        <div id="btnNuevoDis" style="margin-top: 30px;">
-            <a class="btn btn-primary btn-xl text-uppercase" id="btnDispositivo" href="#">Agregar Dispositivo</a>
-        </div>
+    <section class="page-section" id="DisDisplay">
+        
+        <!-- Contenido visible solo para administradores (rol 'adm') -->
+        {% if usuario.roles == 'adm' %}
+        <div class="container">
+            <br><br>
+            <!-- Crud Dispositivos, debe aparecer una vez presionado el boton "Agregar Dispositivo" -->
+            <div class="container-fluid" id="NewDevices">
+                <div class="row">
+                    <form>
+                        <div class="form-group">
+                            <label class=" control-label">Nombre</label>
+                            <input type="text" placeholder="Ingresar Nombre" id="nombre" 
+                            name="nombre" required class="form-control">
 
-        <!-- Crud Dispositivos, debe aparecer una vez presionado el boton "Agregar Dispositivo" -->
-        <div class="container-fluid" id="NewDevices">
-            <div class="row">
-                <form>
-                    <div class="form-group">
-                        <label class=" control-label">Dispositivo</label>
-                        <input type="text" class="form-control">
+                            <label class=" control-label">Email</label>
+                            <input type="email" placeholder="Ingresar Email" id="email" 
+                            name="email" required class="form-control">
 
-                        <label class=" control-label">Ubicación</label>
-                        <input type="text" class="form-control">
-
-                        <label class=" control-label">Tipo de Dispositivo</label>
-                        <input type="text" class="form-control">
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label class="control-label">**********</label>
-                                <input type="text" class="form-control">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="control-label" for="contrasena">Contraseña</label>
+                                    <input type="password" placeholder="Ingresar Contraseña" 
+                                    id="contrasena" name="contrasena" required class="form-control">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="control-label" for="contrasena2">Repetir Contraseña</label>
+                                    <input type="password" placeholder="Ingresar Contraseña" 
+                                    id="contrasena2" name="contrasena2" required class="form-control">
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="control-label">**********</label>
-                                <input type="text" class="form-control">
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="control-label" for="File">Imagen Perfil</label>
+                                    <input type="file" id="File" name="File" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="control-label" for="Medidor">Medidor</label>
+                                    <input type="text" placeholder="Ingresar Identificador" 
+                                    id="Medidor" name="Medidor" class="form-control">
+                                </div>
                             </div>
-                        </div>
-                        <button type="submit" id="btnSubmitDis" class="btn btn-default"
-                            style="margin-top: 10px;">Submit</button>
-                    </div>
 
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <br>
-
-    <!-- Menu para mostrar los dispositivos ya agregados -->
-    <div class="custom-container">
-        <div class="row">
-            <div class="col-md-11 mx-auto" id="DisContainer">
-                <div class="panel">
-                    <div class="panel-heading">
-                        <div class="row">
-                            <div class="col col-sm-3 col-xs-12">
-                                <h4 class="title">Data <span>List</span></h4>
-                            </div>
-                            <div class="col-sm-9 col-xs-12 text-right">
-                                <div class="btn_group">
-                                    <input type="text" class="form-control" placeholder="Search">
-                                    <button class="btn btn-default" title="Reload"><i
-                                            class="fa fa-sync-alt"></i></button>
-                                    <button class="btn btn-default" title="Pdf"><i class="fa fa-file-pdf"></i></button>
-                                    <button class="btn btn-default" title="Excel"><i
-                                            class="fas fa-file-excel"></i></button>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="input-box" >
+                                        <div class="photos" id="imagePreview" 
+                                        style="width: 300px; height: 150px; margin-top: 20px;
+                                        border: 5px solid #ccc; overflow: hidden;">
+                                            <!-- La imagen se mostrará aquí -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="submit" id="submit-button" class="btn btn-default" 
+                                    style="margin-top: 120px; padding: 9px 12px; width: 90%;" onclick="crudADMusu()">Enviar</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="panel-body table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Img Perfil</th>
-                                    <th>Nombre</th>
-                                    <th>Email</th>
-                                    <th>Estado</th>
-                                    <th>Rol</th>
-                                    <th>Casa_id</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Iterar el diccionario de dispositivos para mostrarlo en la tabla -->
-                                {% for usuario in tablaUsuarios %}
-                                <tr>
-                                    <td>{{ usuario.id }}</td>
-                                    <td>
-                                        {% if usuario.imgPerfil %}
-                                            <img src="{{ usuario.imgPerfil.url }}" alt="Imagen de perfil" style="width: 50px; height: auto;">
-                                        {% else %}
-                                            <img src="{% static 'img/shit.png' %}" alt="Imagen de perfil" style="width: 50px; height: auto;">
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ usuario.nombre }}</td>
-                                    <td>{{ usuario.email }}</td>
-                                    <td>{{ usuario.estado  }}</td>
-                                    <td>{{ usuario.roles }}</td>
-                                    <td>
-                                        {% if usuario.casa %}
-                                            {{ usuario.casa.nombre }}
-                                        {% else %}
-                                            <p>Sin Casa</p>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <ul class="action-list">
-                                            <li>
-                                                <a href="#" data-tip="edit"><i class="fa fa-edit"></i></a>
-                                            </li>
-                                            <li>
-                                                <a href="#" data-tip="delete" onclick="confirmarEliminacion({{ usuario.id }}); return false;">
-                                                    <i class="fa fa-trash"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="panel-footer">
-                        <div class="row">
-                            <div class="col col-sm-6 col-xs-6">showing <b>{{ usuarios|length }}</b> out of <b>25</b> entries</div>
-                            <div class="col-sm-6 col-xs-6">
-                                <ul class="pagination hidden-xs pull-right">
-                                    <li><a href="#"><i class='bx bxs-chevrons-left'></i></a></li>
-                                    <li><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">4</a></li>
-                                    <li><a href="#">5</a></li>
-                                    <li><a href="#"><i class='bx bxs-chevrons-right'></i></a></li>
-                                </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <!-- Menu para mostrar los dispositivos ya agregados -->
+        <div class="custom-container">
+            <div class="row">
+                <div class="col-md-11 mx-auto" id="DisContainer">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col col-sm-3 col-xs-12">
+                                    <h4 class="title">Data <span>List</span></h4>
+                                </div>
+                                <div class="col-sm-9 col-xs-12 text-right">
+                                    <div class="btn_group">
+                                        <input type="text" class="form-control" placeholder="Search">
+                                        <button class="btn btn-default" title="Reload"><i
+                                                class="fa fa-sync-alt"></i></button>
+                                        <button class="btn btn-default" title="Pdf"><i class="fa fa-file-pdf"></i></button>
+                                        <button class="btn btn-default" title="Excel"><i
+                                                class="fas fa-file-excel"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Img Perfil</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Estado</th>
+                                        <th>Rol</th>
+                                        <th>Casa_id</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Iterar el diccionario de dispositivos para mostrarlo en la tabla -->
+                                    {% for usuario in tablaUsuarios %}
+                                    <tr>
+                                        <td>{{ usuario.id }}</td>
+                                        <td>
+                                            {% if usuario.imgPerfil %}
+                                                <img src="{{ usuario.imgPerfil.url }}" alt="Imagen de perfil" style="width: 50px; height: auto;">
+                                            {% else %}
+                                                <img src="{% static 'img/shit.png' %}" alt="Imagen de perfil" style="width: 50px; height: auto;">
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ usuario.nombre }}</td>
+                                        <td>{{ usuario.email }}</td>
+                                        <td>{{ usuario.estado  }}</td>
+                                        <td>{{ usuario.roles }}</td>
+                                        <td>
+                                            {% if usuario.casa %}
+                                                {{ usuario.casa.nombre }}
+                                            {% else %}
+                                                <p>Sin Casa</p>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <ul class="action-list">
+                                                <li>
+                                                    <a href="#" data-tip="edit"><i class="fa fa-edit"></i></a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" data-tip="delete" onclick="confirmarEliminacion({{ usuario.id }}); return false;">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col col-sm-6 col-xs-6">showing <b>{{ usuarios|length }}</b> out of <b>25</b> entries</div>
+                                <div class="col-sm-6 col-xs-6">
+                                    <ul class="pagination hidden-xs pull-right">
+                                        <li><a href="#"><i class='bx bxs-chevrons-left'></i></a></li>
+                                        <li><a href="#">1</a></li>
+                                        <li><a href="#">2</a></li>
+                                        <li><a href="#">3</a></li>
+                                        <li><a href="#">4</a></li>
+                                        <li><a href="#">5</a></li>
+                                        <li><a href="#"><i class='bx bxs-chevrons-right'></i></a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    {% else %}
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-        <h1 style="font-size: 3em; ">no eres administrador</h1>
-    </div>
-    {% endif %}
-</section>
+        {% else %}
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+            <h1 style="font-size: 3em; ">no eres administrador</h1>
+        </div>
+        {% endif %}
+    </section>
 {% endblock contenido %}
 
 <!-- Bloque para el footer de página -->
@@ -157,12 +193,15 @@
 
 <!-- Bloque para el JavaScript de la página -->
 {% block js %}
-<script>
-    function confirmarEliminacion(usuarioId) {
-        if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
-            // Redirigir a la URL de eliminación
-            window.location.href = "{% url 'eliminar_usuario' 0 %}".replace('0', usuarioId);
+    <script>
+        function confirmarEliminacion(usuarioId) {
+            if (confirm("¿Estás seguro de que deseas eliminar este usuario?")) {
+                // Redirigir a la URL de eliminación
+                window.location.href = "{% url 'eliminar_usuario' 0 %}".replace('0', usuarioId);
+            }
         }
-    }
-</script>
+    </script>
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'js/crudADMusu.js' %}"></script>
+    <script src="{% static 'js/sweetalert.min.js' %}"></script>
 {% endblock js %}
