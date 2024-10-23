@@ -83,10 +83,21 @@ $(function() {
     $('#File').on("change", function() {
         var fileInput = $(this)[0].files[0]; // Obtener el archivo seleccionado
     
+        // Limpiar el borde antes de realizar validaciones
+        $(this).css({
+            "border-color": "",
+            "border-width": "",
+            "border-style": ""
+        });
+
         if (!fileInput) {
             // Si no se ha seleccionado ningún archivo
-            $(this).css("border-color", "red");
-            swal("Debe subir un archivo");
+            $(this).css({
+                "border-color": "red",
+                "border-width": "3px",
+                "border-style": "solid"
+            });
+            swal("Debe subir un archivo"); // Muestra el mensaje de alerta
             return;
         }
     
@@ -96,11 +107,19 @@ $(function() {
     
         if ($.inArray(fileExtension, validExtensions) == -1) {
             // Si la extensión no es válida
-            $(this).css("border-color", "red");
+            $(this).css({
+                "border-color": "red",
+                "border-width": "3px",
+                "border-style": "solid"
+            });
             swal("Debe subir una imagen válida (jpg, jpeg, png, gif)");
         } else {
             // Si el archivo es válido, mostrar la imagen
-            $(this).css("border-color", "white");
+            $(this).css({
+                "border-color": "",
+                "border-width": "",
+                "border-style": ""
+            });
     
             // Crear un FileReader para mostrar la imagen
             var reader = new FileReader();
