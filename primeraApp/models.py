@@ -52,7 +52,7 @@ class Dispositivo(models.Model):
     nombre = models.CharField(max_length=255, verbose_name="Nombre del dispositivo")
     medidor = models.ForeignKey(Medidor, on_delete=models.CASCADE, verbose_name="Medidor vinculado", related_name="dispositivos")
     casa = models.ForeignKey(Casa, on_delete=models.CASCADE, verbose_name="Grupo familiar", related_name="dispositivos")
-    ubicacion = models.CharField(max_length=100, verbose_name="Tipo de dispositivo", null=True, blank=True)
+    ubicacion = models.CharField(max_length=100, verbose_name="ubicación del dispositivo", null=True, blank=True)
     tipo = models.CharField(max_length=100, verbose_name="Tipo de dispositivo", null=True, blank=True)
 
     def __str__(self):
