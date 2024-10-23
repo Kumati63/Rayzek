@@ -167,6 +167,19 @@ $(function() {
             $(this).css("border-color","white");
         }
     });
+
+    $('#Casa').on( "blur", function() {
+        if ($(this).val().length === 0) {
+            $(this).css({
+                "border-color": "red",
+                "border-width": "3px",
+                "border-style": "solid"
+            });
+            swal("Debe ingresar un Nombre de Grupo");
+        }else{
+            $(this).css("border-color","white");
+        }
+    });
     
     
 });

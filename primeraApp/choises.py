@@ -1,5 +1,4 @@
 roles = (
     ("adm", "administrador"),
-    ("usu","usuario"),
-    ("tec","tecnico")
+    ("usu","usuario")
 )

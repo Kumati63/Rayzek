@@ -3,11 +3,11 @@ from django.http import HttpResponse
 from datetime import datetime
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
-from .models import Usuario
+from .models import Usuario, Casa, Medidor
 from django.contrib.auth.hashers import check_password
 from .decorators import login_required_custom # metodo que verifica el estado de la sesión
 from django.contrib.auth import logout
-
+import random, string
 
 # Create your views here.
 def landingPage(request):
@@ -188,6 +188,12 @@ def logout_view(request):
     logout(request)  # Esto elimina la información de la sesión del usuario
     return redirect('Login')  # Redirigir a la página de inicio de sesión
 
+def generate_group_code(length=10):
+    """Genera un código de grupo aleatorio con caracteres especiales."""
+    letters = string.ascii_uppercase + string.digits + "!@#$%&*?"
+    return ''.join(random.choice(letters) for _ in range(length))
+
+@login_required_custom
 def CrudADMSignup(request):
     usuario_id = request.session.get('usuario_id')
 
@@ -203,6 +209,35 @@ def CrudADMSignup(request):
         
         # Obtener todos los usuarios
         tablaUsuarios = Usuario.objects.all()
+        
+        if request.method == 'POST':
+            # Obtener datos del formulario
+            nombre = request.POST.get('nombre')
+            email = request.POST.get('email')
+            contraseña = request.POST.get('contrasena')
+            imagen_perfil = request.FILES.get('File')
+            identificador_medidor = request.POST.get('Medidor')
+            nombreCasa = request.POST.get('Casa')
+
+            # Generar código de grupo
+            codigo_grupo = generate_group_code()
+            # crear casa
+            casa = Casa.objects.create(nombre=nombreCasa, codigo=codigo_grupo)
+
+            # Crear usuario
+            usuario = Usuario(
+                nombre=nombre, 
+                email=email, 
+                contraseña=contraseña, 
+                imgPerfil=imagen_perfil,
+                casa=casa)
+            usuario.save()
+
+            # Crear el medidor
+            medidor = Medidor(identificador=identificador_medidor, casa=casa)
+            medidor.save()
+
+            return redirect('CrudADMSignup')  # Redirige a la URL de éxito
         
     except Usuario.DoesNotExist:
         del request.session['usuario_id']

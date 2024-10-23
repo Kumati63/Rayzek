@@ -24,7 +24,8 @@
             <!-- Crud Dispositivos, debe aparecer una vez presionado el boton "Agregar Dispositivo" -->
             <div class="container-fluid" id="NewDevices">
                 <div class="row">
-                    <form>
+                    <form method="post" id="apply-form" name="form" action="" enctype="multipart/form-data">
+                        {% csrf_token %}
                         <div class="form-group">
                             <label class=" control-label">Nombre</label>
                             <input type="text" placeholder="Ingresar Nombre" id="nombre" 
@@ -70,8 +71,12 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
+                                    <label class="control-label" for="Casa">Nombre Grupo</label>
+                                    <input type="text" placeholder="Ingresar Nombre Grupo" 
+                                    id="Casa" name="Casa" class="form-control">
+                                    <br>
                                     <button type="submit" id="submit-button" class="btn btn-default" 
-                                    style="margin-top: 120px; padding: 9px 12px; width: 90%;" onclick="crudADMusu()">Enviar</button>
+                                    style="margin-top: 10px; padding: 9px 12px; width: 90%;" onclick="crudADMusu()">Enviar</button>
                                 </div>
                             </div>
                         </div>
