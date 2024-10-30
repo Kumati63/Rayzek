@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from datetime import datetime
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
@@ -257,31 +257,48 @@ def CrudADMSignup(request):
         tablaUsuarios = Usuario.objects.all()
         
         if request.method == 'POST':
-            # Obtener datos del formulario
-            nombre = request.POST.get('nombre')
-            email = request.POST.get('email')
-            contraseña = request.POST.get('contrasena')
-            imagen_perfil = request.FILES.get('File')
-            identificador_medidor = request.POST.get('Medidor')
-            nombreCasa = request.POST.get('Casa')
+            usuario_id = request.POST.get('usuario_id')
+            if usuario_id:
+                usuario = get_object_or_404(Usuario, id=usuario_id)
+                usuario.nombre = request.POST.get('nombre')
+                usuario.email = request.POST.get('email')
+                
+                # Actualiza la casa si es necesario
+                nombre_casa = request.POST.get('Casa')
+                casa, created = Casa.objects.get_or_create(nombre=nombre_casa, codigo=generate_group_code())
+                usuario.casa = casa
+                
+                # Si se proporciona una nueva imagen de perfil
+                if request.FILES.get('File'):
+                    usuario.imgPerfil = request.FILES['File']
+                
+                usuario.save()
+            else:
+                # Obtener datos del formulario
+                nombre = request.POST.get('nombre')
+                email = request.POST.get('email')
+                contraseña = request.POST.get('contrasena')
+                imagen_perfil = request.FILES.get('File')
+                identificador_medidor = request.POST.get('Medidor')
+                nombreCasa = request.POST.get('Casa')
 
-            # Generar código de grupo
-            codigo_grupo = generate_group_code()
-            # crear casa
-            casa = Casa.objects.create(nombre=nombreCasa, codigo=codigo_grupo)
+                # Generar código de grupo
+                codigo_grupo = generate_group_code()
+                # crear casa
+                casa = Casa.objects.create(nombre=nombreCasa, codigo=codigo_grupo)
 
-            # Crear usuario
-            usuario = Usuario(
-                nombre=nombre, 
-                email=email, 
-                contraseña=make_password(contraseña), 
-                imgPerfil=imagen_perfil,
-                casa=casa)
-            usuario.save()
+                # Crear usuario
+                usuario = Usuario(
+                    nombre=nombre, 
+                    email=email, 
+                    contraseña=make_password(contraseña), 
+                    imgPerfil=imagen_perfil,
+                    casa=casa)
+                usuario.save()
 
-            # Crear el medidor
-            medidor = Medidor(identificador=identificador_medidor, casa=casa)
-            medidor.save()
+                # Crear el medidor
+                medidor = Medidor(identificador=identificador_medidor, casa=casa)
+                medidor.save()
 
             return redirect('CrudADMSignup')  # Redirige a la URL de éxito
         
@@ -328,3 +345,16 @@ def cambiar_estado(request, usuario_id):
     
     messages.success(request, f"El estado del usuario {usuario.nombre} ha sido actualizado.")
     return redirect('CrudADMSignup')
+
+def obtener_usuario(request, usuario_id):
+    usuario = get_object_or_404(Usuario, id=usuario_id)
+    data = {
+        'id': usuario.id,
+        'nombre': usuario.nombre,
+        'email': usuario.email,
+        'medidor_identificador': usuario.casa.medidor.identificador if usuario.casa and usuario.casa.medidor else '',
+        'casa_nombre': usuario.casa.nombre if usuario.casa else '',
+        'imgPerfil': usuario.imgPerfil.url if usuario.imgPerfil else None,
+    }
+    return JsonResponse(data)
+

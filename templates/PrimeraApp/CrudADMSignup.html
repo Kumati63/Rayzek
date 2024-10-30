@@ -26,6 +26,7 @@
                 <div class="row">
                     <form method="post" id="apply-form" name="form" action="" enctype="multipart/form-data">
                         {% csrf_token %}
+                        <input type="hidden" name="usuario_id" id="usuario_id" value="">
                         <div class="form-group">
                             <label class=" control-label">Nombre</label>
                             <input type="text" placeholder="Ingresar Nombre" id="nombre" 
@@ -161,8 +162,11 @@
                                         <td>
                                             <ul class="action-list">
                                                 <li>
-                                                    <a href="#" data-tip="edit"><i class="fa fa-edit"></i></a>
+                                                    <a href="#"  data-tip="edit" onclick="cargarDatosUsuario({{ usuario.id }}); return false;">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
                                                 </li>
+                                                
                                                 <li>
                                                     <a href="#" data-tip="delete" onclick="confirmarEliminacion({{ usuario.id }}); return false;">
                                                         <i class="fa fa-trash"></i>
@@ -218,6 +222,31 @@
             }
         }
     </script>
+    <script>
+        const obtenerUsuarioUrl = "{% url 'obtener_usuario' 0 %}";
+
+        function cargarDatosUsuario(usuarioId) {
+            $.ajax({
+                url: obtenerUsuarioUrl.replace('0', usuarioId),  
+                method: 'GET',
+                success: function(data) {
+                    $('#nombre').val(data.nombre);
+                    $('#email').val(data.email);
+                    $('#Medidor').val(data.medidor_identificador);
+                    $('#Casa').val(data.casa_nombre);
+                    $('#usuario_id').val(data.id);  // Campo oculto para el ID del usuario
+                    // También podrías cargar la imagen de perfil si es necesario
+                    if (data.imgPerfil) {
+                        $('#imagePreview').html(`<img src="${data.imgPerfil}" alt="Imagen de perfil" style="width: 100%; height: auto;">`);
+                    }
+                },
+                error: function() {
+                    alert('Error al cargar los datos del usuario.');
+                }
+            });
+        }
+    </script>
+    
     <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
     <script src="{% static 'js/crudADMusu.js' %}"></script>
     <script src="{% static 'js/sweetalert.min.js' %}"></script>

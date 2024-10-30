@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.urls import path
 from primeraApp import views
-from .views import logout_view
 
 urlpatterns = [
     path('', views.landingPage,name='landingPage'),
@@ -14,8 +13,9 @@ urlpatterns = [
     path('Menu/', views.Menu,name='Menu'),
     path('wattsGraphs/', views.wattsGraphs,name='wattsGraphs'),
     path('CrudMiembros/', views.CrudMiembros,name='CrudMiembros'),
-    path('logout/', logout_view, name='logout'),  # URL para cerrar sesión
+    path('logout/', views.logout_view, name='logout'),  # URL para cerrar sesión
     path('CrudADMSignup/', views.CrudADMSignup,name='CrudADMSignup'),
     path('eliminar_usuario/<int:usuario_id>/', views.eliminar_usuario, name='eliminar_usuario'),
     path('cambiar-estado/<int:usuario_id>/', views.cambiar_estado, name='cambiar_estado'),
+    path('usuarios/<int:usuario_id>/', views.obtener_usuario, name='obtener_usuario'),
 ]
