@@ -1,18 +1,53 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from datetime import datetime
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
 from .models import Usuario, Dispositivo, Casa, Medidor
-from django.contrib.auth.hashers import check_password
 from .decorators import login_required_custom # metodo que verifica el estado de la sesión
 from django.contrib.auth import logout
-import random, string
+import random, string, base64, hashlib
+from django.conf import settings
+
 
 # Create your views here.
 def landingPage(request):
     
     return render(request,'PrimeraApp/LandingPage.html')
+
+# Función para verificar la contraseña con el formato utilizado en la app
+def django_check_password_app(password, encoded):
+    parts = encoded.split('$')
+    if len(parts) != 4:
+        return False
+
+    algorithm, iterations, salt, hash_value = parts
+    iterations = int(iterations)
+
+    # Verificar que sea PBKDF2 con SHA256
+    if algorithm != 'pbkdf2_sha256':
+        return False
+
+    # Método 1: Usamos el salt tal cual, decodificando el salt en base64
+    calculated_hash_1 = base64.b64encode(hashlib.pbkdf2_hmac(
+        'sha256',
+        password.encode(),
+        base64.b64decode(salt),  # Decodificamos el salt en base64
+        iterations,
+        32
+    )).decode()
+
+    # Método 2: Usamos el salt tal cual, sin codificación en base64
+    calculated_hash_2 = base64.b64encode(hashlib.pbkdf2_hmac(
+        'sha256',
+        password.encode(),
+        salt.encode(),  # Usamos el salt tal cual
+        iterations,
+        32
+    )).decode()
+
+    # Retornar verdadero si cualquiera de los dos métodos coincide
+    return hash_value == calculated_hash_1 or hash_value == calculated_hash_2
 
 def Login(request):
     if request.method == 'POST':
@@ -31,8 +66,18 @@ def Login(request):
                 request.session[f'failed_attempts_{email}'] = 0
                 failed_attempts = 0  # Reiniciar el contador si la cuenta está desbloqueada
 
-            # Usar check_password para verificar la contraseña hasheada
-            if check_password(password, user.contraseña):  # Validar la contraseña
+            # Primero intentamos con el método estándar de Django (para contraseñas creadas en la web)
+            if check_password(password, user.contraseña):
+                # Verificar si la cuenta está activa
+                if user.estado == 1:
+                    # Reiniciar el contador de intentos fallidos al iniciar sesión correctamente
+                    request.session[f'failed_attempts_{email}'] = 0
+                    # Iniciar sesión manualmente guardando el usuario en la sesión
+                    request.session['usuario_id'] = user.id
+                    return redirect('Menu')
+
+            # Si la verificación estándar falla, intentamos con la verificación de la app
+            elif django_check_password_app(password, user.contraseña):
                 # Verificar si la cuenta está activa
                 if user.estado == 1:
                     # Reiniciar el contador de intentos fallidos al iniciar sesión correctamente
