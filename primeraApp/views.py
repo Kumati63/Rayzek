@@ -76,15 +76,15 @@ def Login(request):
                     request.session['usuario_id'] = user.id
                     return redirect('Menu')
 
-            # Si la verificación estándar falla, intentamos con la verificación de la app
-            elif django_check_password_app(password, user.contraseña):
-                # Verificar si la cuenta está activa
-                if user.estado == 1:
-                    # Reiniciar el contador de intentos fallidos al iniciar sesión correctamente
-                    request.session[f'failed_attempts_{email}'] = 0
-                    # Iniciar sesión manualmente guardando el usuario en la sesión
-                    request.session['usuario_id'] = user.id
-                    return redirect('Menu')
+                # Si la verificación estándar falla, intentamos con la verificación de la app
+                elif django_check_password_app(password, user.contraseña):
+                    # Verificar si la cuenta está activa
+                    if user.estado == 1:
+                        # Reiniciar el contador de intentos fallidos al iniciar sesión correctamente
+                        request.session[f'failed_attempts_{email}'] = 0
+                        # Iniciar sesión manualmente guardando el usuario en la sesión
+                        request.session['usuario_id'] = user.id
+                        return redirect('Menu')
 
             else:
                 # Incrementar el contador de intentos fallidos si la contraseña es incorrecta
