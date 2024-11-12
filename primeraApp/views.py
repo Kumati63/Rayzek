@@ -309,9 +309,24 @@ def CrudADMSignup(request):
                 usuario.email = request.POST.get('email')
                 
                 # Actualiza la casa si es necesario
-                nombre_casa = request.POST.get('Casa')
-                casa, created = Casa.objects.get_or_create(nombre=nombre_casa, codigo=generate_group_code())
-                usuario.casa = casa
+                if request.POST.get('Casa'):
+                    # Generar código de grupo
+                    codigo_grupo = generate_group_code()
+                    nombre_casa = request.POST.get('Casa')
+                    casa, creado = Casa.objects.get_or_create(nombre=nombre_casa, codigo=codigo_grupo)
+                    usuario.casa = casa
+                    
+                # Obtener el identificador del medidor
+                identificadorMedidor = request.POST.get('Medidor')
+                
+                if identificadorMedidor:
+                    # Verificar si ya existe un medidor para la casa del usuario
+                    existing_medidor = Medidor.objects.filter(casa=usuario.casa).first()
+                    
+                    if not existing_medidor:  # Si no existe, creamos un medidor
+                        # Crear medidor para la casa
+                        medidor = Medidor(identificador=identificadorMedidor, casa=usuario.casa)
+                        medidor.save()
                 
                 # Si se proporciona una nueva imagen de perfil
                 if request.FILES.get('File'):
