@@ -308,18 +308,25 @@ def CrudADMSignup(request):
                 usuario.nombre = request.POST.get('nombre')
                 usuario.email = request.POST.get('email')
                 
-                # Actualiza la casa si es necesario
+                # Verificar si se debe actualizar la casa
                 if request.POST.get('Casa'):
-                    # Generar código de grupo
-                    codigo_grupo = generate_group_code()
                     nombre_casa = request.POST.get('Casa')
-                    casa, creado = Casa.objects.get_or_create(nombre=nombre_casa, codigo=codigo_grupo)
-                    usuario.casa = casa
-                    
+                    # Verificar si el usuario ya tiene una casa vinculada, si es así no la cambiamos
+                    if usuario.casa is None or usuario.casa.nombre != nombre_casa:
+                        # Generar código de grupo solo si se crea una nueva casa
+                        codigo_grupo = generate_group_code()
+                        casa, creado = Casa.objects.get_or_create(nombre=nombre_casa, codigo=codigo_grupo)
+                        usuario.casa = casa
+                
+                # Verificar si se debe crear un medidor
                 identificadorMedidor = request.POST.get('Medidor')
                 if identificadorMedidor:
-                    medidor = Medidor(identificador=identificadorMedidor, casa=casa)
-                    medidor.save()
+                    # Verificar si ya existe un medidor para la casa asociada al usuario
+                    existing_medidor = Medidor.objects.filter(casa=usuario.casa).first()
+
+                    if not existing_medidor:  # Si no existe medidor, creamos uno nuevo
+                        medidor = Medidor(identificador=identificadorMedidor, casa=usuario.casa)
+                        medidor.save()
                 
                 # Si se proporciona una nueva imagen de perfil
                 if request.FILES.get('File'):
