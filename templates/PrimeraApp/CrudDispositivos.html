@@ -62,9 +62,18 @@
                                     <h4 class="title">Lista de Dispositivos</h4>
                                 </div>
                                 <div class="col-sm-9 col-xs-12 text-right">
-                                    <div class="btn_group">
-                                        <input type="text" class="form-control d-inline-block w-50" placeholder="Buscar">
-                                        <button class="btn btn-default" title="Recargar"><i class="fa fa-sync-alt"></i></button>
+                                    <div class="btn_group d-flex align-items-center justify-content-end">
+                                        <!-- Formulario de búsqueda centrado y con input más grande -->
+                                        <form method="get" action="{% url 'CrudDispositivos' %}" class="d-flex justify-content-center flex-grow-1">
+                                            <div class="d-flex w-100">
+                                                <!-- Campo de búsqueda más grande y centrado -->
+                                                <input type="text" name="search" class="form-control" value="{{ search_query }}" placeholder="Buscar..." style="max-width: 500px; font-size: 18px; margin-right: 10px; height: 40px;" />
+                                                <button type="submit" class="btn btn-default" title="Buscar" style="height: 45px; width: 45px; border-radius: 50px;"><i class="fa fa-search"></i></button>
+                                            </div>
+                                        </form>
+                                        
+                                        <!-- Botones -->
+                                        <button class="btn btn-default" title="Reload"><i class="fa fa-sync-alt"></i></button>
                                         <button class="btn btn-default" title="Pdf"><i class="fa fa-file-pdf"></i></button>
                                         <button class="btn btn-default" title="Excel"><i class="fas fa-file-excel"></i></button>
                                     </div>
@@ -95,8 +104,16 @@
                                         <td>{{ dispositivo.casa_id }}</td>
                                         <td>
                                             <ul class="action-list">
-                                                <li><a href="#" data-tip="edit"><i class="fa fa-edit"></i></a></li>
-                                                <li><a href="#" data-tip="delete"><i class="fa fa-trash"></i></a></li>
+                                                <li>
+                                                    <a href="#" data-tip="edit" onclick="cargarDatosUsuario({{ dispositivo.id }}); return false;">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" data-tip="delete" onclick="confirmarEliminacion({{ dispositivo.id }}); return false;">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </td>
                                     </tr>
@@ -131,4 +148,16 @@
 
 {% block js %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function confirmarEliminacion(DispositivoId) {
+        if (confirm("¿Estás seguro de que deseas eliminar este dispositivo?")) {
+            // Redirigir a la URL de eliminación
+            window.location.href = "{% url 'eliminar_dispositivo' 0 %}".replace('0', DispositivoId);
+        }
+    }
+</script>
+
+
+
 {% endblock js %}

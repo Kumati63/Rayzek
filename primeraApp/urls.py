@@ -18,6 +18,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),  # URL para cerrar sesión
     path('CrudADMSignup/', views.CrudADMSignup,name='CrudADMSignup'),
     path('eliminar_usuario/<int:usuario_id>/', views.eliminar_usuario, name='eliminar_usuario'),
+    path('eliminar_dispositivo/<int:DispositivoId>/', views.eliminar_dispositivo, name='eliminar_dispositivo'),
     path('cambiar-estado/<int:usuario_id>/', views.cambiar_estado, name='cambiar_estado'),
     path('usuarios/<int:usuario_id>/', views.obtener_usuario, name='obtener_usuario'),
     path('verificar_email/', views.verificar_email, name='verificar_email'),

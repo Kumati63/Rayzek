@@ -60,6 +60,10 @@ def Login(request):
 
             # Obtener el contador de intentos fallidos
             failed_attempts = request.session.get(f'failed_attempts_{email}', 0)
+            
+            if user.estado == 0:
+                messages.error(request, "Tu cuenta está bloqueada")
+                return redirect('Login')
 
             # Si la cuenta está activa y los intentos fallidos son 3, reiniciar contador
             if user.estado == 1 and failed_attempts >= 3:
@@ -150,8 +154,12 @@ def CrudDispositivos(request):
         del request.session['usuario_id']
         return redirect('Login')
 
+    search_query = request.GET.get('search', '')
     # Obtener dispositivos del usuario
     dispositivos = Dispositivo.objects.filter(casa=usuario.casa)
+    if search_query:
+            # Filtrar por nombre o email si se ingresa algún término
+            dispositivos = dispositivos.filter(nombre__icontains=search_query)
     
     # Obtener medidores asociados a la casa del usuario
     medidores = Medidor.objects.filter(casa=usuario.casa)
@@ -194,6 +202,7 @@ def CrudDispositivos(request):
         'usuario': usuario,
         'dispositivos': dispositivos,
         'medidores': medidores,  # Agregar medidores al contexto
+        'search_query': search_query
     }
     
     return render(request, 'PrimeraApp/CrudDispositivos.html', context)
@@ -464,6 +473,15 @@ def eliminar_usuario(request, usuario_id):
 
     # Redirigir de vuelta a la lista de usuarios
     return redirect('CrudADMSignup')
+
+def eliminar_dispositivo(request, DispositivoId):
+    dispositivo = get_object_or_404(Dispositivo, id=DispositivoId)
+
+    # Eliminar el usuario
+    dispositivo.delete()
+
+    # Redirigir de vuelta a la lista de usuarios
+    return redirect('CrudDispositivos')
 
 def cambiar_estado(request, usuario_id):
     # Obtener el usuario autenticado desde la sesión
