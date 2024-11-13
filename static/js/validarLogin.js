@@ -54,10 +54,8 @@ $(document).ready(function() {
                 console.log("Respuesta de AJAX:", data);  // Verifica qué devuelve el servidor
                 if (!data.disponible) {
                     $('#email').css("border-color", "green");
-                    swal("El Email está registrado.");
                 } else {
                     $('#email').css("border-color", "red");
-                    swal("El Email no está registrado.");
                     $("#submit-button").prop("disabled", true);
                 }
             },

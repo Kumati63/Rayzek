@@ -98,10 +98,10 @@ def Login(request):
                 if failed_attempts == 3:
                     # Bloquear la cuenta usando update()
                     Usuario.objects.filter(email=email).update(estado=0)
-                    messages.error(request, 'Cuenta bloqueada por múltiples intentos fallidos')
+                    messages.error(request, 'Cuenta bloqueada por múltiples fallos')
                 else:
                     remaining_attempts = 3 - failed_attempts
-                    messages.error(request, f'Contraseña incorrecta. Intentos restantes: {remaining_attempts}')
+                    messages.error(request, f'Intentos restantes: {remaining_attempts}')
 
         except Usuario.DoesNotExist:
             messages.error(request, 'Email no registrado')
@@ -336,9 +336,6 @@ def CrudNotificaciones(request):
                 ) | notificaciones.filter(
                     dispositivo__nombre__icontains=query
                 )
-                messages.success(request, f"Resultados para la búsqueda: '{query}'")
-            else:
-                messages.warning(request, "Por favor ingresa un texto para buscar.")
 
     context = {
         'usuario': usuario,
@@ -503,14 +500,12 @@ def cambiar_estado(request, usuario_id):
 
     # Verificar si es el usuario actual
     if usuario.id == usuario_actual.id:
-        messages.error(request, "No puedes desactivar tu propio usuario.")
         return redirect('CrudADMSignup')
     
     # Cambiar estado del usuario
     nuevo_estado = 1 if usuario.estado == 0 else 0
     Usuario.objects.filter(id=usuario_id).update(estado=nuevo_estado)
     
-    messages.success(request, f"El estado del usuario {usuario.nombre} ha sido actualizado.")
     return redirect('CrudADMSignup')
 
 def obtener_usuario(request, usuario_id):
