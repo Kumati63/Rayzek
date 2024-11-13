@@ -379,8 +379,16 @@ def CrudADMSignup(request):
         if usuario.roles != 'adm':
             return redirect('Menu')
         
+        # Filtrado por búsqueda
+        search_query = request.GET.get('search', '')  # Buscar por nombre o email
         # Obtener todos los usuarios
         tablaUsuarios = Usuario.objects.all()
+        
+        if search_query:
+            # Filtrar por nombre o email si se ingresa algún término
+            tablaUsuarios = tablaUsuarios.filter(
+                nombre__icontains=search_query) | tablaUsuarios.filter(
+                email__icontains=search_query)
         
         if request.method == 'POST':
             usuario_id = request.POST.get('usuario_id')
@@ -446,7 +454,7 @@ def CrudADMSignup(request):
     except Usuario.DoesNotExist:
         del request.session['usuario_id']
         return redirect('Login')
-    return render(request,'PrimeraApp/CrudADMSignup.html', {'usuario': usuario, 'tablaUsuarios': tablaUsuarios})
+    return render(request,'PrimeraApp/CrudADMSignup.html', {'usuario': usuario, 'tablaUsuarios': tablaUsuarios, 'search_query': search_query})
 
 def eliminar_usuario(request, usuario_id):
     usuario = get_object_or_404(Usuario, id=usuario_id)
