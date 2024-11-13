@@ -76,15 +76,15 @@ def Login(request):
                     request.session['usuario_id'] = user.id
                     return redirect('Menu')
 
-            # Si la verificación estándar falla, intentamos con la verificación de la app
-            elif django_check_password_app(password, user.contraseña):
-                # Verificar si la cuenta está activa
-                if user.estado == 1:
-                    # Reiniciar el contador de intentos fallidos al iniciar sesión correctamente
-                    request.session[f'failed_attempts_{email}'] = 0
-                    # Iniciar sesión manualmente guardando el usuario en la sesión
-                    request.session['usuario_id'] = user.id
-                    return redirect('Menu')
+                # Si la verificación estándar falla, intentamos con la verificación de la app
+                elif django_check_password_app(password, user.contraseña):
+                    # Verificar si la cuenta está activa
+                    if user.estado == 1:
+                        # Reiniciar el contador de intentos fallidos al iniciar sesión correctamente
+                        request.session[f'failed_attempts_{email}'] = 0
+                        # Iniciar sesión manualmente guardando el usuario en la sesión
+                        request.session['usuario_id'] = user.id
+                        return redirect('Menu')
 
             else:
                 # Incrementar el contador de intentos fallidos si la contraseña es incorrecta
@@ -389,10 +389,25 @@ def CrudADMSignup(request):
                 usuario.nombre = request.POST.get('nombre')
                 usuario.email = request.POST.get('email')
                 
-                # Actualiza la casa si es necesario
-                nombre_casa = request.POST.get('Casa')
-                casa, created = Casa.objects.get_or_create(nombre=nombre_casa, codigo=generate_group_code())
-                usuario.casa = casa
+                # Verificar si se debe actualizar la casa
+                if request.POST.get('Casa'):
+                    nombre_casa = request.POST.get('Casa')
+                    # Verificar si el usuario ya tiene una casa vinculada, si es así no la cambiamos
+                    if usuario.casa is None or usuario.casa.nombre != nombre_casa:
+                        # Generar código de grupo solo si se crea una nueva casa
+                        codigo_grupo = generate_group_code()
+                        casa, creado = Casa.objects.get_or_create(nombre=nombre_casa, codigo=codigo_grupo)
+                        usuario.casa = casa
+                
+                # Verificar si se debe crear un medidor
+                identificadorMedidor = request.POST.get('Medidor')
+                if identificadorMedidor:
+                    # Verificar si ya existe un medidor para la casa asociada al usuario
+                    existing_medidor = Medidor.objects.filter(casa=usuario.casa).first()
+
+                    if not existing_medidor:  # Si no existe medidor, creamos uno nuevo
+                        medidor = Medidor(identificador=identificadorMedidor, casa=usuario.casa)
+                        medidor.save()
                 
                 # Si se proporciona una nueva imagen de perfil
                 if request.FILES.get('File'):
@@ -484,3 +499,8 @@ def obtener_usuario(request, usuario_id):
     }
     return JsonResponse(data)
 
+def verificar_email(request):
+    email = request.GET.get('email', '')  # Obtenemos el email del parámetro de la consulta GET
+    if Usuario.objects.filter(email=email).exists():
+        return JsonResponse({'disponible': False})  # El email ya está registrado
+    return JsonResponse({'disponible': True})  # El email está disponible
