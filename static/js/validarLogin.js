@@ -42,6 +42,32 @@ $(document).ready(function() {
         } else {
             $(this).css("border-color", "white");
         }
+
+        // Realizar la verificación del email con AJAX
+        $.ajax({
+            url: verificarEmailUrl,  // Usamos la variable que tiene la URL correcta
+            data: {
+                'email': emailValue
+            },
+            dataType: 'json',  // Esperamos una respuesta JSON
+            success: function(data) {
+                console.log("Respuesta de AJAX:", data);  // Verifica qué devuelve el servidor
+                if (!data.disponible) {
+                    $('#email').css("border-color", "green");
+                    swal("El Email está registrado.");
+                } else {
+                    $('#email').css("border-color", "red");
+                    swal("El Email no está registrado.");
+                    $("#submit-button").prop("disabled", true);
+                }
+            },
+            error: function(xhr, status, error) {
+                // Este bloque se ejecuta si hay un error en la solicitud AJAX
+                console.error("Error en la solicitud AJAX:", status, error);
+                $('#email').css("border-color", "red");
+                swal("Ocurrió un error al verificar el correo electrónico.");
+            }
+        });
     });
 
     $('#contrasena').on("blur", function() {

@@ -418,3 +418,8 @@ def obtener_usuario(request, usuario_id):
     }
     return JsonResponse(data)
 
+def verificar_email(request):
+    email = request.GET.get('email', '')  # Obtenemos el email del parámetro de la consulta GET
+    if Usuario.objects.filter(email=email).exists():
+        return JsonResponse({'disponible': False})  # El email ya está registrado
+    return JsonResponse({'disponible': True})  # El email está disponible

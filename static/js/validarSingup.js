@@ -28,17 +28,52 @@ $(function() {
         $(this).val(sanitizedValue);
     });
 
-    $('#email').on("blur", function() {
+    $('#email').on('blur', function() {
         const emailValue = $(this).val();
+    
+        // Si el campo está vacío o el email es inválido
         if (emailValue.length === 0) {
             $(this).css("border-color", "red");
             swal("Debe ingresar un email");
+            return;  // No hacemos la solicitud si el email está vacío
         } else if (!validateEmail(emailValue)) {
             $(this).css("border-color", "red");
             swal("Email inválido. Asegúrese de que tenga el formato correcto.");
+            return;  // Si el email tiene formato incorrecto, no hacemos la solicitud
         } else {
-            $(this).css("border-color", "white");
+            $(this).css("border-color", "white");  // Si el email es válido, restauramos el borde
         }
+    
+        // Realizar la verificación del email con AJAX
+        $.ajax({
+            url: verificarEmailUrl,  // Usamos la variable que tiene la URL correcta
+            data: {
+                'email': emailValue
+            },
+            dataType: 'json',  // Esperamos una respuesta JSON
+            success: function(data) {
+                console.log("Respuesta de AJAX:", data);  // Verifica qué devuelve el servidor
+                if (!data.disponible) {
+                    $('#email').css("border-color", "red");
+                    swal("El correo electrónico ya está registrado.");
+                    // Deshabilitar el botón de envío
+                    $("#submit-button").prop("disabled", true);
+                    toggleStyles(true);
+                } else {
+                    $('#email').css("border-color", "green");
+                    swal("El correo electrónico está disponible.");
+                    // habilitar el botón de envío
+                    $("#submit-button").prop("disabled", false);
+                    toggleStyles(false);
+                }
+            },
+            error: function(xhr, status, error) {
+                // Este bloque se ejecuta si hay un error en la solicitud AJAX
+                console.error("Error en la solicitud AJAX:", status, error);
+                $('#email').css("border-color", "red");
+                swal("Ocurrió un error al verificar el correo electrónico.");
+            }
+        });
     });
 
     $('#contrasena').on( "blur", function() {
@@ -152,7 +187,6 @@ function validarSignup(){
         }else{
             if(!validateEmail())
             {
-                swal("Email invalido");
                 document.form.email.focus();
                 return false;
             }
