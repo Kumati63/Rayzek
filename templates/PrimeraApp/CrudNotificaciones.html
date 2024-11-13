@@ -1,73 +1,169 @@
-{% extends "primeraApp/main.html" %}
-{% load static %}
+    {% extends "primeraApp/main.html" %}
+    {% load static %}
 
-{% block contenido %}
-<div class="container mt-5 CrudNotificaciones-maincontainer">
-    <h2 class="text-black">Notificaciones</h2>
-    <table class="CrudNotificaciones-table table table-bordered" style="background-color: #fff; color: black;">
-        <thead style="color: black">
-            <tr>
-                <th>ID</th>
-                <th>Alerta</th>
-                <th>Timestamp</th>
-                <th>Usuario</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Iterar el diccionario de alertas para mostrarlo en la tabla -->
-            {% for clave, valor in alertas.items %}
-            <tr style="background-color: white; color: black;">
-                <td>{{ valor.id }}</td>
-                <td>{{ valor.alerta }}</td>
-                <td>{{ valor.timestamp }}</td>
-                <td>{{ valor.usuario }}</td>
-                <td>
-                    &nbsp;<img src="{% static 'img/delete.png' %}" alt="Delete">&nbsp;&nbsp;&nbsp;&nbsp;<img src="{% static 'img/update.png' %}" alt="Delete">
-                </td>
-            </tr>   
-            {% endfor %}
-        </tbody>
-    </table>
-    </table>
-    <button type="CrudNotificaciones-btn-agregar" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addNotificationModal">
-        Agregar Notificación
-    </button>
-    <!-- Modal -->
-    <div class="modal fade" id="addNotificationModal" tabindex="-1" aria-labelledby="addNotificationModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="CrudNotificaciones-modal-content modal-content">
-                <div class="CrudNotificaciones-modal-header modal-header">
-                    <h5 class="modal-title" id="addNotificationModalLabel">Agregar Notificación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    {% block contenido %}
+    <div class="container mt-5 CrudNotificaciones-maincontainer">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addNotificationModal">
+            Agregar Notificación
+        </button>
+        <br><br><br>
+        <!-- Modal -->
+        <div class="modal fade" id="addNotificationModal" tabindex="-1" aria-labelledby="addNotificationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="CrudNotificaciones-modal-content modal-content">
+                    <div class="CrudNotificaciones-modal-header modal-header">
+                        <h5 class="modal-title" id="addNotificationModalLabel">Agregar Notificación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="CrudNotificaciones-modal-body modal-body" >
+                        <!-- Formulario para agregar una notificación-->
+                        <form id="addNotificationForm" method="POST" action="{% url 'CrudNotificaciones' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="mensaje" class="form-label">Mensaje</label>
+                                <input type="text" class="form-control" id="mensaje" name="mensaje" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fecha_programada" class="form-label">Fecha y Hora Programada</label>
+                                <input type="datetime-local" class="form-control" id="fecha_programada" name="fecha_programada" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dispositivo" class="form-label">Dispositivo</label>
+                                <select class="form-control" id="dispositivo" name="dispositivo" required>
+                                    <option value="">Seleccione un dispositivo</option>
+                                    {% for dispositivo in dispositivos %}
+                                    <option value="{{ dispositivo.id }}">{{ dispositivo.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" name="agregar" class="btn btn-primary">Agregar Notificación</button>
+                        </form>
+                    </div>
                 </div>
-                <div class="CrudNotificaciones-modal-body modal-body" >
-                    <!-- Formulario para agregar una notificación envia los datos por POST al view-->
-                    <form id="addNotificationForm" method="POST">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="alerta" class="form-label">Alerta</label>
-                            <input type="text" class="form-control" id="alerta" name="alerta" required>
+            </div>
+        </div>
+        <!-- Modal para Editar Notificación -->
+        <div class="modal fade" id="editNotificationModal" tabindex="-1" aria-labelledby="editNotificationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="CrudNotificaciones-modal-content modal-content">
+                    <div class="CrudNotificaciones-modal-header modal-header">
+                        <h5 class="modal-title" id="editNotificationModalLabel">Editar Notificación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="CrudNotificaciones-modal-body modal-body">
+                        <form id="editNotificationForm" method="POST" action="{% url 'CrudNotificaciones' %}">
+                            {% csrf_token %}
+                            <input type="hidden" id="edit_notificacion_id" name="notificacion_id">
+                            <div class="mb-3">
+                                <label for="edit_mensaje" class="form-label">Mensaje</label>
+                                <input type="text" class="form-control" id="edit_mensaje" name="mensaje" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_fecha_programada" class="form-label">Fecha y Hora Programada</label>
+                                <input type="datetime-local" class="form-control" id="edit_fecha_programada" name="fecha_programada" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit_dispositivo" class="form-label">Dispositivo</label>
+                                <select class="form-control" id="edit_dispositivo" name="dispositivo" required>
+                                    <option value="">Seleccione un dispositivo</option>
+                                    {% for dispositivo in dispositivos %}
+                                    <option value="{{ dispositivo.id }}">{{ dispositivo.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" name="editar" class="btn btn-primary">Guardar Cambios</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="custom-container">
+            <div class="row">
+                <div class="col-md-11 mx-auto" id="DisContainer">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col col-sm-3 col-xs-12">
+                                    <h4 class="title">Notificaciones</h4>
+                                </div>
+                                <div class="col-sm-9 col-xs-12 text-right">
+                                    <div class="btn_group">
+                                        <form method="POST" action="{% url 'CrudNotificaciones' %}" style="display: inline;">
+                                            {% csrf_token %}
+                                            <input type="text" name="query" value="{{ query }}" class="form-control d-inline-block w-50" placeholder="Buscar">
+                                            <button type="submit" name="buscar" class="btn btn-default" title="Buscar">
+                                                <i class="fa fa-sync-alt"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="timestamp" class="form-label">Timestamp</label>
-                            <input type="datetime-local" class="form-control" id="timestamp" name="timestamp" required>
+
+                        <div class="panel-body table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Mensaje</th>
+                                        <th>Fecha Programada</th>
+                                        <th>Dispositivo</th>
+                                        <th>Usuario</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for notificacion in notificaciones %}
+                                    <tr>
+                                        <td>{{ notificacion.id }}</td>
+                                        <td>{{ notificacion.mensaje }}</td>
+                                        <td>{{ notificacion.fecha_programada|date:"d-m-Y H:i" }}</td>
+                                        <td>{{ notificacion.dispositivo.nombre }}</td>
+                                        <td>{{ notificacion.usuario.nombre }}</td>
+                                        <td>
+                                            <form method="POST" style="display: inline;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="notificacion_id" value="{{ notificacion.id }}">
+                                                <button type="button" class="btn btn-warning" onclick="openEditModal('{{ notificacion.id }}', '{{ notificacion.mensaje }}', '{{ notificacion.fecha_programada|date:'Y-m-d\\TH:i' }}', '{{ notificacion.dispositivo.id }}')">Modificar</button>
+                                                <button type="submit" name="eliminar" class="btn btn-danger">Eliminar</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="mb-3">
-                            <label for="usuario" class="form-label">Usuario</label>
-                            <input type="text" class="form-control" id="usuario" name="usuario" required>
+
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col col-sm-6 col-xs-6">Mostrando <b></b>  <b></b> entradas</div>
+                                <div class="col-sm-6 col-xs-6">
+                                    <ul class="pagination hidden-xs pull-right">
+                                        <li><a href="#"><i class='bx bxs-chevrons-left'></i></a></li>
+                                        <li><a href="#">1</a></li>
+                                        <li><a href="#"><i class='bx bxs-chevrons-right'></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
-                        <button type="submit" class="CrudNotificaciones-btn-guardar btn btn-primary">Guardar</button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-{% endblock contenido %}
+    {% endblock contenido %}
 
-{% block js %}
-<script>
-    
-</script>
-{% endblock js %}
+    {% block js %}
+    <script>
+        function openEditModal(id, mensaje, fechaProgramada, dispositivoId) {
+            document.getElementById('edit_notificacion_id').value = id;
+            document.getElementById('edit_mensaje').value = mensaje;
+            document.getElementById('edit_fecha_programada').value = fechaProgramada;
+            document.getElementById('edit_dispositivo').value = dispositivoId;
+        
+            const editModal = new bootstrap.Modal(document.getElementById('editNotificationModal'));
+            editModal.show();
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    {% endblock js %}

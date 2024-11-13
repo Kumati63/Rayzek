@@ -94,11 +94,14 @@ class Historial(models.Model):
 
 class Notificacion(models.Model):
     casa = models.ForeignKey(Casa, on_delete=models.CASCADE, related_name="notificaciones")
+    usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True, related_name="notificaciones")
+    dispositivo = models.ForeignKey(Dispositivo, on_delete=models.SET_NULL, null=True, blank=True, related_name="notificaciones")
     mensaje = models.CharField(max_length=255)
     fecha = models.DateTimeField(auto_now_add=True)
+    fecha_programada = models.DateTimeField(null=True, blank=True, verbose_name="Fecha y hora programada")
 
     def __str__(self):
-        return f"Notificación para {self.casa.nombre} - {self.fecha}"
+        return f"Notificación para {self.casa.nombre} - {self.fecha_programada}"
     
     class Meta:
         db_table = 'notificacion'

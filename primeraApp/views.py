@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from datetime import datetime
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
-from .models import Usuario, Dispositivo, Casa, Medidor
+from .models import Usuario, Dispositivo, Casa, Medidor, Notificacion
 from .decorators import login_required_custom # metodo que verifica el estado de la sesión
 from django.contrib.auth import logout
 import random, string, base64, hashlib
@@ -252,11 +252,92 @@ def CrudNotificaciones(request):
 
     try:
         usuario = Usuario.objects.get(id=usuario_id)
-        
     except Usuario.DoesNotExist:
         del request.session['usuario_id']
         return redirect('Login')
-    return render(request,'PrimeraApp/CrudNotificaciones.html', {'usuario': usuario})
+
+    notificaciones = Notificacion.objects.filter(casa=usuario.casa)
+    dispositivos = Dispositivo.objects.filter(casa=usuario.casa)
+
+    query = request.POST.get('query', '').strip()
+    if request.method == 'POST':
+        if 'agregar' in request.POST:
+            mensaje = request.POST.get('mensaje')
+            fecha_programada = request.POST.get('fecha_programada')
+            dispositivo_id = request.POST.get('dispositivo')
+
+            if mensaje and fecha_programada and dispositivo_id:
+                try:
+                    from datetime import datetime
+                    fecha_programada = datetime.strptime(fecha_programada, "%Y-%m-%dT%H:%M")
+                    dispositivo = Dispositivo.objects.get(id=dispositivo_id)
+
+                    notificacion = Notificacion(
+                        casa=usuario.casa,
+                        usuario=usuario,
+                        dispositivo=dispositivo,
+                        mensaje=mensaje,
+                        fecha_programada=fecha_programada
+                    )
+                    notificacion.save()
+                    messages.success(request, 'Notificación agregada exitosamente.')
+                except Exception as e:
+                    messages.error(request, f'Error al crear la notificación: {str(e)}')
+
+        elif 'editar' in request.POST:
+            notificacion_id = request.POST.get('notificacion_id')
+            mensaje = request.POST.get('mensaje')
+            fecha_programada = request.POST.get('fecha_programada')
+            dispositivo_id = request.POST.get('dispositivo')
+
+            if not notificacion_id or not mensaje or not fecha_programada or not dispositivo_id:
+                messages.error(request, 'Todos los campos son obligatorios para editar la notificación.')
+                return redirect('CrudNotificaciones')
+
+            try:
+                from datetime import datetime
+                notificacion = Notificacion.objects.get(id=notificacion_id)
+                notificacion.mensaje = mensaje
+                fecha_programada = datetime.strptime(fecha_programada, "%Y-%m-%dT%H:%M")
+                notificacion.fecha_programada = fecha_programada
+                notificacion.dispositivo = Dispositivo.objects.get(id=dispositivo_id)
+                notificacion.save()
+                messages.success(request, 'Notificación editada exitosamente.')
+            except Exception as e:
+                messages.error(request, f'Error al editar la notificación: {str(e)}')
+
+        elif 'eliminar' in request.POST:
+            notificacion_id = request.POST.get('notificacion_id')
+            if notificacion_id:
+                try:
+                    notificacion = Notificacion.objects.get(id=notificacion_id)
+                    notificacion.delete()
+                    messages.success(request, 'Notificación eliminada exitosamente.')
+                except Notificacion.DoesNotExist:
+                    messages.error(request, 'La notificación no existe.')
+                except Exception as e:
+                    messages.error(request, f'Error al eliminar la notificación: {str(e)}')
+
+        elif 'buscar' in request.POST:
+            if query:
+                notificaciones = notificaciones.filter(
+                    mensaje__icontains=query
+                ) | notificaciones.filter(
+                    usuario__nombre__icontains=query
+                ) | notificaciones.filter(
+                    dispositivo__nombre__icontains=query
+                )
+                messages.success(request, f"Resultados para la búsqueda: '{query}'")
+            else:
+                messages.warning(request, "Por favor ingresa un texto para buscar.")
+
+    context = {
+        'usuario': usuario,
+        'notificaciones': notificaciones,
+        'dispositivos': dispositivos,
+        'query': query  
+    }
+    return render(request, 'PrimeraApp/CrudNotificaciones.html', context)
 
 @login_required_custom
 def Menu(request):
