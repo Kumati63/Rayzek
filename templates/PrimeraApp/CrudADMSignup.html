@@ -35,6 +35,8 @@
                             <label class=" control-label">Email</label>
                             <input type="email" placeholder="Ingresar Email" id="email" 
                             name="email" required class="form-control">
+                            <p id="email-error" style="color: red; font-size: 13px; display: none; margin-top: -10px; margin-left: 20px;">Email no disponible</p>
+                        <p id="email-success" style="color: green; font-size: 13px; display: none; margin-top: -10px;margin-left: 20px;">Email disponible</p>
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -52,7 +54,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label class="control-label" for="File">Imagen Perfil</label>
-                                    <input type="file" id="File" name="File" required>
+                                    <input type="file" id="File" name="File">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="control-label" for="Medidor">Medidor</label>
@@ -256,5 +258,8 @@
     <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
     <script src="{% static 'js/crudADMusu.js' %}"></script>
     <script src="{% static 'js/sweetalert.min.js' %}"></script>
+    <script type="text/javascript">
+        var verificarEmailUrl = "{% url 'verificar_email' %}";
+    </script>
     
 {% endblock js %}

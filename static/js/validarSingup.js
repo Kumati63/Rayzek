@@ -56,6 +56,7 @@ $(function() {
                     $('#email').css("border-color", "red");
                     $("#email-error").show();
                     $("#email-success").hide();
+                    $("#File-error").hide();
                     // Deshabilitar el botón de envío
                     $("#submit-button").prop("disabled", true);
                     toggleStyles(true);
@@ -63,6 +64,7 @@ $(function() {
                     $('#email').css("border-color", "green");
                     $("#email-success").show();
                     $("#email-error").hide();
+                    $("#File-error").hide();
                     // habilitar el botón de envío
                     $("#submit-button").prop("disabled", false);
                     toggleStyles(false);
@@ -149,6 +151,9 @@ $(function() {
                 "border-style": "solid"
             });
             swal("Debe subir una imagen válida (jpg, jpeg, png, gif)");
+            $("#email-error").hide();
+            $("#email-success").hide();
+            $("#File-error").show();
         } else {
             // Si el archivo es válido, mostrar la imagen
             $(this).css({
@@ -156,6 +161,9 @@ $(function() {
                 "border-width": "",
                 "border-style": ""
             });
+            $("#email-error").hide();
+            $("#email-success").hide();
+            $("#File-error").hide();
     
             // Crear un FileReader para mostrar la imagen
             var reader = new FileReader();

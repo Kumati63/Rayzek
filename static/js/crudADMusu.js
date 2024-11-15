@@ -11,7 +11,6 @@ $(function() {
 
     // Verificar cada campo cuando pierda el foco o cambie
     $('#nombre, #email, #contrasena, #contrasena2').on("blur", checkFormValidity);
-    $('#File').on("change", checkFormValidity);
 
     $('#nombre').on( "blur", function() 
     {
@@ -51,6 +50,40 @@ $(function() {
         } else {
             $(this).css("border-color", "white");
         }
+        // Realizar la verificación del email con AJAX
+        $.ajax({
+            url: verificarEmailUrl,  // Usamos la variable que tiene la URL correcta
+            data: {
+                'email': emailValue
+            },
+            dataType: 'json',  // Esperamos una respuesta JSON
+            success: function(data) {
+                console.log("Respuesta de AJAX:", data);  // Verifica qué devuelve el servidor
+                if (!data.disponible) {
+                    $('#email').css("border-color", "red");
+                    $("#email-error").show();
+                    $("#email-success").hide();
+                    $("#File-error").hide();
+                    // Deshabilitar el botón de envío
+                    $("#submit-button").prop("disabled", true);
+                    toggleStyles(true);
+                } else {
+                    $('#email').css("border-color", "green");
+                    $("#email-success").show();
+                    $("#email-error").hide();
+                    $("#File-error").hide();
+                    // habilitar el botón de envío
+                    $("#submit-button").prop("disabled", false);
+                    toggleStyles(false);
+                }
+            },
+            error: function(xhr, status, error) {
+                // Este bloque se ejecuta si hay un error en la solicitud AJAX
+                console.error("Error en la solicitud AJAX:", status, error);
+                $('#email').css("border-color", "red");
+                swal("Ocurrió un error al verificar el correo electrónico.");
+            }
+        });
     });
 
     $('#contrasena').on( "blur", function() {
@@ -61,6 +94,13 @@ $(function() {
                 "border-style": "solid"
             });
             swal("Debe ingresar una contraseña");
+        }else if ($(this).val().length < 8) {
+            $(this).css({
+                "border-color": "red",
+                "border-width": "3px",
+                "border-style": "solid"
+            });
+            swal("Minimo 8 caracteres");
         }else{
             $(this).css("border-color","white");
         }
@@ -80,6 +120,13 @@ $(function() {
                 "border-style": "solid"
             });
             swal("Debe ingresar la repetición de la contraseña");
+        }else if ($(this).val().length < 8) {
+            $(this).css({
+                "border-color": "red",
+                "border-width": "3px",
+                "border-style": "solid"
+            });
+            swal("Minimo 8 caracteres");
         } else {
             // Verificar si las dos contraseñas coinciden
             if ($(this).val() !== $('#contrasena').val()) {
@@ -263,9 +310,8 @@ function checkFormValidity() {
     const email = $('#email').val().length > 0 && validateEmail($('#email').val());
     const contrasena = $('#contrasena').val().length > 0;
     const contrasena2 = $('#contrasena2').val().length > 0 && $('#contrasena').val() === $('#contrasena2').val();
-    const file = $('#File')[0].files.length > 0;
 
-    if (nombre && email && contrasena && contrasena2 && file) {
+    if (nombre && email && contrasena && contrasena2) {
         $("#submit-button").prop("disabled", false);
         toggleStyles(false); // Habilitar el botón con estilos normales
     } else {
