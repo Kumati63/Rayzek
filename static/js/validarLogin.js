@@ -54,8 +54,12 @@ $(document).ready(function() {
                 console.log("Respuesta de AJAX:", data);  // Verifica qué devuelve el servidor
                 if (!data.disponible) {
                     $('#email').css("border-color", "green");
+                    $("#no").hide();
+                    $("#yes").show();
                 } else {
                     $('#email').css("border-color", "red");
+                    $("#no").show();
+                    $("#yes").hide();
                     $("#submit-button").prop("disabled", true);
                 }
             },

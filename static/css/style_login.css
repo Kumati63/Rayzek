@@ -14,9 +14,9 @@ body {
 }
 
 .container {
-    background-image: url('/static/img/background.png');
-    background-position: center;
-    background-size: cover;
+    background-image: url('/static/img/background.png') !important;
+    background-position: center !important;
+    background-size: cover !important;
     position: absolute;
     display: block;
     height: 100%;
@@ -26,6 +26,15 @@ body {
     justify-content: center;
 }
 
+.container form {
+    border: 2px solid #fff;
+    width: 380px;
+    height: 538px;
+    margin: 150px auto;
+    background-color: transparent;
+    border-radius: 40px;
+    backdrop-filter: blur(55px);
+}
 
 #title {
     font-size: 45px;
@@ -45,15 +54,7 @@ body {
     border-radius: 10px;
 }
 
-.container form {
-    border: 2px solid #fff;
-    width: 380px;
-    height: 538px;
-    margin: 150px auto;
-    background-color: transparent;
-    border-radius: 40px;
-    backdrop-filter: blur(55px);
-}
+
 
 .container .input-box{
     width: 350px;

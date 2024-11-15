@@ -11,7 +11,6 @@ $(function() {
 
     // Verificar cada campo cuando pierda el foco o cambie
     $('#nombre, #email, #contrasena, #contrasena2').on("blur", checkFormValidity);
-    $('#File').on("change", checkFormValidity);
 
     $('#nombre').on( "blur", function() 
     {
@@ -55,13 +54,15 @@ $(function() {
                 console.log("Respuesta de AJAX:", data);  // Verifica qué devuelve el servidor
                 if (!data.disponible) {
                     $('#email').css("border-color", "red");
-                    swal("El correo electrónico ya está registrado.");
+                    $("#email-error").show();
+                    $("#email-success").hide();
                     // Deshabilitar el botón de envío
                     $("#submit-button").prop("disabled", true);
                     toggleStyles(true);
                 } else {
                     $('#email').css("border-color", "green");
-                    swal("El correo electrónico está disponible.");
+                    $("#email-success").show();
+                    $("#email-error").hide();
                     // habilitar el botón de envío
                     $("#submit-button").prop("disabled", false);
                     toggleStyles(false);
@@ -243,9 +244,8 @@ function checkFormValidity() {
     const email = $('#email').val().length > 0 && validateEmail($('#email').val());
     const contrasena = $('#contrasena').val().length > 0;
     const contrasena2 = $('#contrasena2').val().length > 0 && $('#contrasena').val() === $('#contrasena2').val();
-    const file = $('#File')[0].files.length > 0;
 
-    if (nombre && email && contrasena && contrasena2 && file) {
+    if (nombre && email && contrasena && contrasena2) {
         $("#submit-button").prop("disabled", false);
         toggleStyles(false); // Habilitar el botón con estilos normales
     } else {
