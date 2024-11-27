@@ -70,7 +70,7 @@ class Medicion(models.Model):
     valor = models.FloatField(verbose_name="Consumo en kWh")
 
     def __str__(self):
-        return f"Medición {self.id} - {self.dispositivo.nombre}"
+        return f"{self.timestamp} - {self.consumption} kWh"
     
     class Meta:
         db_table = 'medicion'

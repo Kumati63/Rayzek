@@ -3,200 +3,77 @@
 
 <!-- Bloque para el contenido principal de la página -->
 {% block contenido %}
-    <!-- Contenedor principal para los gráficos -->
-    <div style="display: flex; flex-direction: row; align-items: flex-start; margin-top:80px;">
-
-        <!-- Contenedor para las miniaturas -->
-        <div style="display: flex; flex-direction: column; width: 200px; margin-right: 20px;">
-            <canvas id="miniDona" width="100" height="100" style="margin-bottom:10px; cursor:pointer; transition:transform 0.3s; border:2px solid white;"></canvas>
-            <canvas id="miniLine" width="100" height="100" style="margin-bottom:10px; cursor:pointer; transition:transform 0.3s; border:2px solid white;"></canvas>
-            <canvas id="miniBar" width="100" height="100" style="margin-bottom:10px; cursor:pointer; transition:transform 0.3s; border:2px solid white;"></canvas>
-        </div>
-
-        <!-- Contenedor para el gráfico principal -->
-        <div style="border:2px solid white; width: 600px; height: 600px; display: flex; justify-content: center; align-items: center; margin-left:300px">
-            <canvas id="mainChart" width="280" height="280"></canvas>
-        </div>
-        
+    <hr>
+    <div style="width: 80%; margin: 20px auto;">
+        <h2>Consumo Eléctrico en Tiempo Real</h2>
+        <canvas id="consumptionChart"></canvas>
     </div>
 {% endblock contenido %}
 
 
 <!-- Bloque para el JavaScript de la página -->
 {% block js %}
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const currentData = [5, 10, 15, 20, 25, 30, 35];
+     // Configurar el gráfico inicial
+     const ctx = document.getElementById('consumptionChart').getContext('2d');
+     const consumptionChart = new Chart(ctx, {
+         type: 'line',
+         data: {
+             labels: [], // Fechas (se actualizarán dinámicamente)
+             datasets: [{
+                 label: 'Consumo en kWh',
+                 data: [], // Valores (se actualizarán dinámicamente)
+                 borderColor: 'rgba(75, 192, 192, 1)',
+                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                 tension: 0.4
+             }]
+         },
+         options: {
+             responsive: true,
+             scales: {
+                 x: {
+                     title: {
+                         display: true,
+                         text: 'Fecha'
+                     }
+                 },
+                 y: {
+                     title: {
+                         display: true,
+                         text: 'Consumo (kWh)'
+                     }
+                 }
+             }
+         }
+     });
 
-        // Configuración para todos los gráficos
-        const chartOptions = {
-            // Grafico donut
-            doughnut: {
-                type: 'doughnut',
-                data: {
-                    labels: ['Corriente 1', 'Corriente 2', 'Corriente 3', 'Corriente 4', 'Corriente 5', 'Corriente 6', 'Corriente 7'],
-                    datasets: [{
-                        data: currentData,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)',
-                            'rgba(99, 255, 132, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(99, 255, 132, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                }
-            },
-            // Grafico Linea
-            line: {
-                type: 'line',
-                data: {
-                    labels: ['Tiempo 1', 'Tiempo 2', 'Tiempo 3', 'Tiempo 4', 'Tiempo 5', 'Tiempo 6', 'Tiempo 7'],
-                    datasets: [{
-                        label: 'Corriente en el tiempo',
-                        data: currentData,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        fill: false
-                    }]
-                }
-            },
-            // Grafico Barras
-            bar: {
-                type: 'bar',
-                data: {
-                    labels: ['Corriente 1', 'Corriente 2', 'Corriente 3', 'Corriente 4', 'Corriente 5', 'Corriente 6', 'Corriente 7'],
-                    datasets: [{
-                        label: 'Mediciones de corriente',
-                        data: currentData,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)',
-                            'rgba(99, 255, 132, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)',
-                            'rgba(99, 255, 132, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                }
-            }
-        };
+     // Función para actualizar el gráfico con datos de la API
+     async function updateChart() {
+         try {
+             const response = await fetch('/mediciones/'); // Endpoint de tu API
+             const data = await response.json();
 
-        // Configuración para los gráficos principales (con leyenda y etiquetas)
-        const mainChartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    display: true // Mostrar el eje X
-                },
-                y: {
-                    display: true // Mostrar el eje Y
-                }
-            },
-            plugins: {
-                legend: {
-                    display: true // Mostrar la leyenda
-                },
-                tooltip: {
-                    enabled: true // Habilitar el tooltip para el gráfico principal
-                }
-            },
-            animation: {
-                duration: 300 // Duración de la animación para el gráfico principal
-            }
-        };
+             // Actualizar etiquetas (fechas) y datos (consumo)
+             const labels = data.map(entry => new Date(entry.fecha).toLocaleString());
+             const values = data.map(entry => entry.valor);
 
-        // Configuración básica para gráficos miniatura (sin leyenda, sin etiquetas)
-        const miniChartOptions = {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    display: false // Ocultar la leyenda
-                },
-                tooltip: {
-                    enabled: false // Desactivar el tooltip (información emergente al pasar el ratón)
-                }
-            },
-            animation: {
-                duration: 1 // Desactivar las animaciones para los mini gráficos
-            }
-        };
+             consumptionChart.data.labels = labels;
+             consumptionChart.data.datasets[0].data = values;
 
-        // Crear las miniaturas (pequeños gráficos) con las opciones simplificadas
-        const miniDonaCtx = document.getElementById('miniDona').getContext('2d');
-        const miniDonaChart = new Chart(miniDonaCtx, {
-            ...chartOptions.doughnut,  // Usar configuración de la dona
-            options: miniChartOptions  // Aplicar las opciones de gráficos miniatura
-        });
+             // Refrescar el gráfico
+             consumptionChart.update();
+         } catch (error) {
+             console.error('Error al actualizar el gráfico:', error);
+         }
+     }
 
-        const miniLineCtx = document.getElementById('miniLine').getContext('2d');
-        const miniLineChart = new Chart(miniLineCtx, {
-            ...chartOptions.line,  // Usar configuración de la línea
-            options: miniChartOptions  // Aplicar las opciones de gráficos miniatura
-        });
+     // Actualizar el gráfico cada 5 segundos
+     setInterval(updateChart, 5000);
 
-        const miniBarCtx = document.getElementById('miniBar').getContext('2d');
-        const miniBarChart = new Chart(miniBarCtx, {
-            ...chartOptions.bar,  // Usar configuración de las barras
-            options: miniChartOptions  // Aplicar las opciones de gráficos miniatura
-        });
-
-        // Crear el gráfico principal con las opciones completas
-        const mainChartCtx = document.getElementById('mainChart').getContext('2d');
-        let mainChart = new Chart(mainChartCtx, {
-            ...chartOptions.doughnut, // Por defecto, muestra la dona
-            options: mainChartOptions  // Aplicar las opciones del gráfico principal
-        });
-
-        // Función para cambiar el gráfico principal
-        function changeMainChart(chartType) {
-            mainChart.destroy(); // Destruye el gráfico anterior
-            mainChart = new Chart(mainChartCtx, {
-                ...chartOptions[chartType], // Crea el nuevo gráfico
-                options: mainChartOptions  // Aplicar las opciones del gráfico principal
-            });
-        }
-
-        // Eventos de clic para cambiar el gráfico principal
-        document.getElementById('miniDona').addEventListener('click', function() {
-            changeMainChart('doughnut');
-        });
-
-        document.getElementById('miniLine').addEventListener('click', function() {
-            changeMainChart('line');
-        });
-
-        document.getElementById('miniBar').addEventListener('click', function() {
-            changeMainChart('bar');
-        });
-    });
+     // Actualización inicial
+     updateChart();
 </script>
 
 {% endblock js %}

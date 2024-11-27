@@ -3,11 +3,14 @@ from django.http import HttpResponse, JsonResponse
 from datetime import datetime
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib import messages
-from .models import Usuario, Dispositivo, Casa, Medidor, Notificacion
+from .models import Usuario, Dispositivo, Casa, Medidor, Notificacion, Medicion
 from .decorators import login_required_custom # metodo que verifica el estado de la sesión
 from django.contrib.auth import logout
 import random, string, base64, hashlib
 from django.conf import settings
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import MedicionSerializer
 
 
 # Create your views here.
@@ -525,3 +528,11 @@ def verificar_email(request):
     if Usuario.objects.filter(email=email).exists():
         return JsonResponse({'disponible': False})  # El email ya está registrado
     return JsonResponse({'disponible': True})  # El email está disponible
+
+class MedicionDataView(APIView):
+    def get(self, request):
+        # Obtiene todas las mediciones de la base de datos
+        mediciones = Medicion.objects.all()
+        # Serializa los datos
+        serializer = MedicionSerializer(mediciones, many=True)
+        return Response(serializer.data)
