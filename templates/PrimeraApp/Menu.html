@@ -5,10 +5,12 @@
         {% if usuario.roles == 'adm' %}
             <!-- Mostrar contenido exclusivo para administradores -->
             <h1 style="font-size: 3em; ">Bienvenido Administrador,<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ usuario.nombre }}</h1>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ usuario.nombre }}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ usuario.email }}</h1>
         {% else %}
             <!-- Mostrar contenido para usuarios normales -->
-            <h1 style="font-size: 3em; ">Bienvenido, {{ usuario.nombre }}</h1>
+            <h1 style="font-size: 3em; ">Bienvenido, {{ usuario.nombre }}<br>
+                {{ usuario.email }}</h1>
         {% endif %}
     </div>
 {% endblock contenido %}
