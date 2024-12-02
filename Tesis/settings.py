@@ -1,5 +1,7 @@
 from pathlib import Path
 import os
+import pymysql
+pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,7 +16,7 @@ SECRET_KEY = 'django-insecure-!a^po2@f%0v3_lo@i_s16^3x04m9p1_b0b(^1o=s@)efau3&@&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '18.207.30.7']
 
 
 # Application definition
@@ -26,11 +28,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
     'primeraApp',
     'segundaApp',
     'terceraApp',
-    
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
