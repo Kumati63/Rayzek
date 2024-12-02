@@ -83,6 +83,13 @@ $(function() {
         if ($(this).val().length === 0) {
             $(this).css("border-color","red");
             swal("Debe ingresar una contraseña");
+        }else if ($(this).val().length < 8) {
+            $(this).css({
+                "border-color": "red",
+                "border-width": "3px",
+                "border-style": "solid"
+            });
+            swal("Minimo 8 caracteres");
         }else{
             $(this).css("border-color","white");
         }
@@ -98,6 +105,13 @@ $(function() {
         if ($(this).val().length === 0) {
             $(this).css("border-color", "red");
             swal("Debe ingresar la repetición de la contraseña");
+        }else if ($(this).val().length < 8) {
+            $(this).css({
+                "border-color": "red",
+                "border-width": "3px",
+                "border-style": "solid"
+            });
+            swal("Minimo 8 caracteres");
         } else {
             // Verificar si las dos contraseñas coinciden
             if ($(this).val() !== $('#contrasena').val()) {
@@ -250,9 +264,23 @@ function toggleStyles(applyStyles) {
 function checkFormValidity() {
     const nombre = $('#nombre').val().length > 0;
     const email = $('#email').val().length > 0 && validateEmail($('#email').val());
-    const contrasena = $('#contrasena').val().length > 0;
-    const contrasena2 = $('#contrasena2').val().length > 0 && $('#contrasena').val() === $('#contrasena2').val();
+    const contrasena = $('#contrasena').val().length >= 8;
+    const contrasena2 = $('#contrasena2').val().length >= 8 && $('#contrasena').val() === $('#contrasena2').val();
 
+    let emailDisponible = false;
+    $.ajax({
+        url: verificarEmailUrl,
+        data: { 'email': $('#email').val() },
+        dataType: 'json',
+        async: false, // Esto permite que el flujo espere la respuesta del servidor
+        success: function(data) {
+            emailDisponible = data.disponible;  // Si el email está disponible, se marca como true
+        },
+        error: function(xhr, status, error) {
+            console.error("Error en la solicitud AJAX:", status, error);
+        }
+    });
+    
     if (nombre && email && contrasena && contrasena2) {
         $("#submit-button").prop("disabled", false);
         toggleStyles(false); // Habilitar el botón con estilos normales
