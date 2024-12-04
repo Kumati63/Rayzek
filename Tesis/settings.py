@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'primeraApp',
     'segundaApp',
     'terceraApp',
+    'rayzekApi',
     'rest_framework',
 ]
 

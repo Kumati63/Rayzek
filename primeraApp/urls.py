@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from primeraApp import views
 from .views import MedicionDataView
-
+from rayzekApi import views as vistaApis
 
 urlpatterns = [
     path('', views.landingPage,name='landingPage'),
@@ -25,4 +25,9 @@ urlpatterns = [
     path('usuarios/<int:usuario_id>/', views.obtener_usuario, name='obtener_usuario'),
     path('verificar_email/', views.verificar_email, name='verificar_email'),
     path('mediciones/', MedicionDataView.as_view(), name='medicion_data'),
+    
+    # Rutas a las api restful
+    path('usuariosApi/', vistaApis.usuariosApi,name='usuariosApi'),
+    path('usuariosListApi/', vistaApis.usuario_listado,name='usuariosListApi'),
+    path('usuariosListApi/<int:pk>', vistaApis.usuarios_detalles,name='usuariosDetalleApi'),
 ]
