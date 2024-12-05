@@ -1,79 +1,152 @@
 {% extends "PrimeraApp/main.html" %}
 {% load static %}
 
-<!-- Bloque para el contenido principal de la página -->
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/graficos.css' %}">
+{% endblock styles %}
+
 {% block contenido %}
     <hr>
     <div style="width: 80%; margin: 20px auto;">
         <h2>Consumo Eléctrico en Tiempo Real</h2>
-        <canvas id="consumptionChart"></canvas>
+        
+        <!-- Selección de dispositivo -->
+        <label for="deviceSelect">Selecciona un dispositivo:</label>
+        <select id="deviceSelect">
+            <option value="">Seleccionar...</option>
+        </select>
+        
+        <!-- Gráficos -->
+        <canvas id="consumptionChart" style="display: block;"></canvas>
+        <canvas id="donutChart" style="display: none;"></canvas>
     </div>
 {% endblock contenido %}
 
-
-<!-- Bloque para el JavaScript de la página -->
 {% block js %}
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-     // Configurar el gráfico inicial
-     const ctx = document.getElementById('consumptionChart').getContext('2d');
-     const consumptionChart = new Chart(ctx, {
-         type: 'line',
-         data: {
-             labels: [], // Fechas (se actualizarán dinámicamente)
-             datasets: [{
-                 label: 'Consumo en kWh',
-                 data: [], // Valores (se actualizarán dinámicamente)
-                 borderColor: 'rgba(75, 192, 192, 1)',
-                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                 tension: 0.4
-             }]
-         },
-         options: {
-             responsive: true,
-             scales: {
-                 x: {
-                     title: {
-                         display: true,
-                         text: 'Fecha'
-                     }
-                 },
-                 y: {
-                     title: {
-                         display: true,
-                         text: 'Consumo (kWh)'
-                     }
-                 }
-             }
-         }
-     });
+    const consumptionCtx = document.getElementById('consumptionChart').getContext('2d');
+    const donutCtx = document.getElementById('donutChart').getContext('2d');
 
-     // Función para actualizar el gráfico con datos de la API
-     async function updateChart() {
-         try {
-             const response = await fetch('/mediciones/'); // Endpoint de tu API
-             const data = await response.json();
+    // Gráfico de línea
+    const consumptionChart = new Chart(consumptionCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Consumo en kWh',
+                data: [],
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { title: { display: true, text: 'Fecha' } },
+                y: { title: { display: true, text: 'Consumo (kWh)' } }
+            }
+        }
+    });
 
-             // Actualizar etiquetas (fechas) y datos (consumo)
-             const labels = data.map(entry => new Date(entry.fecha).toLocaleString());
-             const values = data.map(entry => entry.valor);
+    // Gráfico de dona
+    const donutChart = new Chart(donutCtx, {
+        type: 'doughnut',
+        data: {
+            labels: [],
+            datasets: [{
+                data: [],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)',
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(153, 102, 255, 0.7)',
+                    'rgba(255, 159, 64, 0.7)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                title: { display: true, text: '' }
+            }
+        }
+    });
 
-             consumptionChart.data.labels = labels;
-             consumptionChart.data.datasets[0].data = values;
+    // Función para cargar dispositivos
+    async function loadDevices() {
+        try {
+            const response = await fetch('/dispositivos/');
+            const devices = await response.json();
+            const select = document.getElementById('deviceSelect');
+            devices.forEach(device => {
+                const option = document.createElement('option');
+                option.value = device.id;
+                option.textContent = device.nombre;
+                select.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Error al cargar dispositivos:', error);
+        }
+    }
 
-             // Refrescar el gráfico
-             consumptionChart.update();
-         } catch (error) {
-             console.error('Error al actualizar el gráfico:', error);
-         }
-     }
+    // Función para actualizar el gráfico de línea
+    async function updateLineChart(deviceId) {
+        try {
+            const url = deviceId ? `/mediciones/?dispositivo_id=${deviceId}` : '/mediciones/';
+            const response = await fetch(url);
+            const data = await response.json();
 
-     // Actualizar el gráfico cada 5 segundos
-     setInterval(updateChart, 5000);
+            const labels = data.map(entry => new Date(entry.fecha).toLocaleString());
+            const values = data.map(entry => entry.valor);
 
-     // Actualización inicial
-     updateChart();
+            consumptionChart.data.labels = labels;
+            consumptionChart.data.datasets[0].data = values;
+
+            consumptionChart.update();
+        } catch (error) {
+            console.error('Error al actualizar el gráfico de línea:', error);
+        }
+    }
+
+    // Función para actualizar el gráfico de dona
+    async function updateDonutChart() {
+        try {
+            const response = await fetch('/consumo-total/');
+            const data = await response.json();
+
+            const labels = data.map(entry => entry.nombre);
+            const values = data.map(entry => entry.total);
+
+            donutChart.data.labels = labels;
+            donutChart.data.datasets[0].data = values;
+
+            donutChart.update();
+        } catch (error) {
+            console.error('Error al actualizar el gráfico de dona:', error);
+        }
+    }
+
+    // Listener para cambios en el menú desplegable
+    document.getElementById('deviceSelect').addEventListener('change', (e) => {
+        const deviceId = e.target.value;
+        if (deviceId) {
+            document.getElementById('consumptionChart').style.display = 'block';
+            document.getElementById('donutChart').style.display = 'none';
+            updateLineChart(deviceId);
+        } else {
+            document.getElementById('consumptionChart').style.display = 'none';
+            document.getElementById('donutChart').style.display = 'block';
+            updateDonutChart();
+        }
+    });
+
+    // Inicialización
+    loadDevices();
+    updateDonutChart(); 
 </script>
-
 {% endblock js %}

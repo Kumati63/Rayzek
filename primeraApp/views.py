@@ -531,8 +531,19 @@ def verificar_email(request):
 
 class MedicionDataView(APIView):
     def get(self, request):
-        # Obtiene todas las mediciones de la base de datos
-        mediciones = Medicion.objects.all()
-        # Serializa los datos
+        dispositivo_id = request.query_params.get('dispositivo_id', None)
+        
+        # Filtra las mediciones si se proporciona un dispositivo_id
+        if dispositivo_id:
+            mediciones = Medicion.objects.filter(dispositivo_id=dispositivo_id)
+        else:
+            mediciones = Medicion.objects.all()
+        
         serializer = MedicionSerializer(mediciones, many=True)
         return Response(serializer.data)
+    
+class DispositivosView(APIView):
+    def get(self, request):
+        dispositivos = Dispositivo.objects.all()
+        data = [{"id": dispositivo.id, "nombre": dispositivo.nombre} for dispositivo in dispositivos]
+        return Response(data)
