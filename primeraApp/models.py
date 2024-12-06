@@ -18,6 +18,7 @@ class Casa(models.Model):
         verbose_name_plural = 'casas'
 
 class Usuario(models.Model):
+    id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255, verbose_name="Nombre del usuario")
     email = models.EmailField(max_length=255, unique=True)
     contraseña = models.CharField(max_length=255)
