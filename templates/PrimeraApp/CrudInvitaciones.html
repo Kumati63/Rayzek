@@ -3,58 +3,28 @@
 <!-- Bloque para el contenido principal de la página -->
 {% block contenido %}
 <section>
-    <div class="container">
-      <br>
-      <div class="row">
-          <div class="col-1">
-          </div>
-          <div class="col-10">
-              <div class="col-9">
-                  <form>
-                      <!-- Aquí se colocarán los campos del formulario -->
-                      <form>
-                        <div class="form-group" style="font-family: Arial, Helvetica, sans-serif; box-shadow: 5px 5px 5px black;">
-                        <h2 style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 3em; border-radius: 5px;">Invitar Usuario</h2>
-                        <br>
-                          <label for="nombre">Nombre Completo:</label>
-                          <input type="text" class="form-control" style="box-shadow: 5px 5px 5px black;" id="nombre" name="nombre" required/>
-                          <br>
-                          <label for="correo">Correo electrónico:</label>
-                          <input type="email" class="form-control" style="box-shadow: 5px 5px 5px black;" id="correo" name="correo" required/>
-                          <br>
-                          <label for="tipo">Seleccione tipo de usuario:</label><br><br>
-                          {% comment %} <input type="" class="form-control" style="box-shadow: 5px 5px 5px black;" id="correo" name="correo" required/> {% endcomment %}
-                          
-                          <select name="tipo" id="tipo" required>
-                            <option value="Seleccionar">Seleccionar</option>
-                            {% for clave, valor in Tipo_usuario.items %}
-                            <option value="clave">{{valor.Tipo}}</option>
-                            {% endfor %}
-                          </select>
-                        <br>
-                        <label for="qr">O use un codigo QR:</label>
-                        <br>
-                        <img name= "qr" id="qr" src="{% static 'img/qr.png' %}" width="150" alt="Qr">
-                          <br>
-                          <br>
-                          <button type="submit" class="btn btn-primary" style="box-shadow: 5px 5px 5px black;">Enviar</button>
-                          <br>
-                          <br>
-                        </div>
-                        <br>                
-                      </form>
-                    </form>
-              </div>
-              <div class="col-3">
-              </div>
-              <div class="col-9">
-              </div>
-          </div>
-          <div class="col-1">
-          </div>
-      </div>
+  <div class="container">
+    <br>
+    <div class="row">
+      <!-- Aquí se colocarán los campos del formulario -->
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-group" style="font-family: Arial, Helvetica, sans-serif; box-shadow: 5px 5px 5px black;">
+          <h2 style="text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 3em; border-radius: 5px;">
+            Invitar Usuario</h2>
+          <br>
+          <label for="correo">Correo electrónico:</label>
+          <input type="email" class="form-control" style="box-shadow: 5px 5px 5px black;" id="correo" name="correo" required/>
+          <br>
+          <button type="submit" class="btn btn-primary" style="box-shadow: 5px 5px 5px black;">Enviar</button>
+          <br>
+          <br>
+        </div>
+        <br>
+      </form>
     </div>
-  </section>
+  </div>
+</section>
 {% endblock contenido %}
 
 <!-- Bloque para el footer de página -->

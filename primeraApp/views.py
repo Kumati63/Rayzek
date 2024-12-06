@@ -11,7 +11,8 @@ from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import MedicionSerializer
-
+from django.core.mail import send_mail
+from django.utils.http import urlencode
 
 # Create your views here.
 def landingPage(request):
@@ -214,16 +215,44 @@ def CrudDispositivos(request):
 def CrudInvitaciones(request):
     usuario_id = request.session.get('usuario_id')
 
+    # Check if the usuario_id exists in the session
     if not usuario_id:
         return redirect('Login')
 
     try:
+        # Fetch the Usuario instance based on usuario_id
         usuario = Usuario.objects.get(id=usuario_id)
-        
     except Usuario.DoesNotExist:
+        # If the user doesn't exist in the database, clear the session and redirect
         del request.session['usuario_id']
         return redirect('Login')
-    return render(request,'PrimeraApp/CrudInvitaciones.html', {'usuario': usuario})
+    
+    if request.method == 'POST':
+        # Retrieve the email from the form
+        correo = request.POST.get('correo')
+        
+        # Use the user's casa as the invitation code
+        codigo = usuario.casa.codigo
+        
+        # Build the invitation link
+        params = urlencode({'codigo': codigo, 'correo': correo})
+        enlace = request.build_absolute_uri(f'/confirmar-invitacion/?{params}')
+        
+        try:
+            # Send the email invitation
+            asunto = "Invitación a unirse a un grupo"
+            mensaje = f"Te invitamos a unirte al grupo con el siguiente enlace:\n\n{enlace}\n\nSi ya eres parte de un grupo, no podrás unirte a otro."
+            send_mail(asunto, mensaje, settings.EMAIL_HOST_USER, [correo])
+            
+            # Notify the user that the invitation was successfully sent
+            messages.success(request, 'Invitación enviada correctamente.')
+        except Exception as e:
+            # If email sending fails, show an error message
+            messages.error(request, f'Error al enviar la invitación: {str(e)}')
+        
+        return redirect('CrudInvitaciones')
+    
+    return render(request, 'PrimeraApp/CrudInvitaciones.html', {'usuario': usuario})
 
 @login_required_custom
 def CrudMiembros(request):
@@ -547,3 +576,47 @@ class DispositivosView(APIView):
         dispositivos = Dispositivo.objects.all()
         data = [{"id": dispositivo.id, "nombre": dispositivo.nombre} for dispositivo in dispositivos]
         return Response(data)
+    
+    
+def confirmar_invitacion(request):
+    codigo = request.GET.get('codigo')  # Obtener el código de la URL
+    correo = request.GET.get('correo')  # Obtener el correo de la URL
+
+    if not codigo or not correo:
+        return HttpResponse("Código o correo inválidos", status=400)
+
+    try:
+        # Buscar al usuario por correo
+        usuario = Usuario.objects.get(email=correo)
+    except Usuario.DoesNotExist:
+        return HttpResponse("Usuario no encontrado", status=404)
+
+    # Verificar si el usuario ya tiene un grupo (Casa)
+    if usuario.casa:
+        # Si el usuario ya tiene una casa asignada
+        messages.error(request, "Ya estás en un grupo, no puedes unirte a otro.")
+        return redirect('mailresultBad')  # Redirige a la página de inicio o donde sea apropiado
+
+    try:
+        # Buscar la Casa usando el código proporcionado en la URL
+        grupo = Casa.objects.get(codigo=codigo)
+    except Casa.DoesNotExist:
+        messages.error(request, "El grupo con el código proporcionado no existe.")
+        return redirect('Login')  # Redirige a una página de error o inicio
+
+    # Si el usuario no tiene grupo, asignarle el grupo encontrado
+    usuario.casa = grupo
+    usuario.save()  # Guardar los cambios en la base de datos
+
+    # Mensaje de éxito
+    messages.success(request, "Te has unido al grupo exitosamente.")
+
+    return redirect('mailresultGood')  # Redirige a la página de inicio o donde sea apropiado
+
+def mailresultGood(request):
+    
+    return render(request,'PrimeraApp/mailresultGood.html')
+
+def mailresultBad(request):
+    
+    return render(request,'PrimeraApp/mailresultBad.html')

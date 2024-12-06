@@ -9,6 +9,8 @@ urlpatterns = [
     path('Login/', views.Login,name='Login'),
     path('Signup/', views.Signup,name='Signup'),
     path('main/', views.main,name='main'),
+    path('mailresultGood/', views.mailresultGood,name='mailresultGood'),
+    path('mailresultBad/', views.mailresultBad,name='mailresultBad'),
     path('CrudNotificaciones/', views.CrudNotificaciones, name='CrudNotificaciones'),
     path('notificaciones/editar/', views.CrudNotificaciones, name='editar_notificacion'),
     path('notificaciones/eliminar/', views.CrudNotificaciones, name='eliminar_notificacion'),
@@ -26,6 +28,7 @@ urlpatterns = [
     path('verificar_email/', views.verificar_email, name='verificar_email'),
     path('mediciones/', MedicionDataView.as_view(), name='medicion_data'),
     path('dispositivos/', DispositivosView.as_view(), name='dispositivos_data'),
+    path('confirmar-invitacion/', views.confirmar_invitacion, name='confirmar_invitacion'),
     
     # Rutas a las api restful
     path('usuariosApi/', vistaApis.usuariosApi,name='usuariosApi'),

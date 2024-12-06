@@ -108,3 +108,18 @@ class Notificacion(models.Model):
         managed = True
         verbose_name = 'notificación'
         verbose_name_plural = 'notificaciones'
+        
+
+# class Luces(models.Model):
+#     luz = models.FloatField(verbose_name="Luz a automatizar")
+#     fecha = models.DateField()
+#     casa = models.ForeignKey(Casa, on_delete=models.CASCADE, verbose_name="Grupo familiar", related_name="dispositivos")
+    
+#     def __str__(self):
+#         return f"Luces {self.id} - {self.dispositivo.nombre}"
+    
+#     class Meta:
+#         db_table = 'luz'
+#         managed = True
+#         verbose_name = 'luz'
+#         verbose_name_plural = 'luces'
