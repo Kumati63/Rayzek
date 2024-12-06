@@ -595,7 +595,7 @@ def confirmar_invitacion(request):
     if usuario.casa:
         # Si el usuario ya tiene una casa asignada
         messages.error(request, "Ya estás en un grupo, no puedes unirte a otro.")
-        return redirect('mailresultBad')  # Redirige a la página de inicio o donde sea apropiado
+        return redirect('mailResultBad')  # Redirige a la página de inicio o donde sea apropiado
 
     try:
         # Buscar la Casa usando el código proporcionado en la URL
@@ -611,15 +611,15 @@ def confirmar_invitacion(request):
     # Mensaje de éxito
     messages.success(request, "Te has unido al grupo exitosamente.")
 
-    return redirect('mailresultGood')  # Redirige a la página de inicio o donde sea apropiado
+    return redirect('mailResultGood')  # Redirige a la página de inicio o donde sea apropiado
 
-def mailresultGood(request):
+def mailResultGood(request):
     
-    return render(request,'PrimeraApp/mailresultGood.html')
+    return render(request,'PrimeraApp/mailResultGood.html')
 
-def mailresultBad(request):
+def mailResultBad(request):
     
-    return render(request,'PrimeraApp/mailresultBad.html')
+    return render(request,'PrimeraApp/mailResultBad.html')
 
 
 @login_required_custom
