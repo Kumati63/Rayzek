@@ -30,28 +30,26 @@
                             <tr>
                                 <th>#</th>
                                 <th>Nombre Completo</th>
-                                <th>Correo electronico</th> 
-                                <th>tipo</th> 
+                                <th>Correo electronico</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- Iterar el diccionario de dispositivos para mostrarlo en la tabla -->
-                            {% for clave, valor in usuarios.items %}
-                                <tr>
-                                    <td>{{ valor.id }}</td>
-                                    <td>{{ valor.nombre }}</td>
-                                    <td>{{ valor.email }}</td>
-                                    <td>{{ valor.tipo}}</td> 
-                                    <td>
-                                        <ul class="action-list">
-                                            <li><a href="#" data-tip="edit"><i class="fa fa-edit"></i></a>
-                                            </li>
-                                            <li><a href="#" data-tip="delete"><i class="fa fa-trash"></i></a>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                </tr>
+                            {% for usuario in tablaUsuarios %}
+                            <tr>
+                                <td>{{ usuario.id }}</td>
+                                <td>{{ usuario.nombre }}</td>
+                                <td>{{ usuario.email }}</td>
+                                <td>
+                                    <ul class="action-list">
+                                        <li><a href="#" data-tip="edit"><i class="fa fa-edit"></i></a>
+                                        </li>
+                                        <li><a href="#" data-tip="delete"><i class="fa fa-trash"></i></a>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
                             {% endfor %}
                         </tbody>
                     </table>

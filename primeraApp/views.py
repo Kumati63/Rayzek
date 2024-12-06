@@ -267,7 +267,11 @@ def CrudMiembros(request):
     except Usuario.DoesNotExist:
         del request.session['usuario_id']
         return redirect('Login')
-    return render(request,'PrimeraApp/CrudMiembros.html', {'usuario': usuario})
+    
+    tablaUsuarios = Usuario.objects.filter(casa=usuario.casa)
+    
+    
+    return render(request,'PrimeraApp/CrudMiembros.html', {'usuario': usuario, 'tablaUsuarios': tablaUsuarios})
 
 @login_required_custom
 def wattsGraphs(request):
