@@ -620,3 +620,9 @@ def mailresultGood(request):
 def mailresultBad(request):
     
     return render(request,'PrimeraApp/mailresultBad.html')
+
+
+@login_required_custom
+def userSettings(request):
+    
+    return render(request,'PrimeraApp/userSettings.html')

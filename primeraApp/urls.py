@@ -11,6 +11,7 @@ urlpatterns = [
     path('main/', views.main,name='main'),
     path('mailresultGood/', views.mailresultGood,name='mailresultGood'),
     path('mailresultBad/', views.mailresultBad,name='mailresultBad'),
+    path('userSettings/', views.userSettings,name='userSettings'),
     path('CrudNotificaciones/', views.CrudNotificaciones, name='CrudNotificaciones'),
     path('notificaciones/editar/', views.CrudNotificaciones, name='editar_notificacion'),
     path('notificaciones/eliminar/', views.CrudNotificaciones, name='eliminar_notificacion'),
