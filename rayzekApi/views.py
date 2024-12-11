@@ -65,12 +65,12 @@ def dispositivosApi(request):
 @api_view(['GET','POST'])
 def dispositivo_listado(request):
     if request.method == 'GET':
-        Dispositivos = Dispositivo.objects.all()
-        serializer= DispositivosSerializar(Usuarios,many=True)
+        dispositivos = Dispositivo.objects.all()
+        serializer= DispositivoSerializar(dispositivos,many=True)
         return Response(serializer.data)
     
     if request.method == 'POST':
-        serializer = DispositivosSerializar(data = request.data)
+        serializer = DispositivoSerializar(data = request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
@@ -79,21 +79,21 @@ def dispositivo_listado(request):
 @api_view(['GET','PUT','DELETE'])
 def Dispositivos_detalles(request,pk):
     try:
-        Dispositivo = Dispositivo.objects.get(id=pk)
+        dispositivo = Dispositivo.objects.get(id=pk)
     except Dispositivo.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND) 
     
     if request.method == 'GET':
-        serializer = DispositivosSerializar(usuario)
+        serializer = DispositivoSerializar(dispositivo)
         return Response(serializer.data)
     
     if request.method == 'PUT':
-        serializer = DispositivosSerializar(usuario, data=request.data)
+        serializer = DispositivoSerializar(dispositivo, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
         
     if request.method == 'DELETE':
-        Dispositivo.delete()
+        dispositivo.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

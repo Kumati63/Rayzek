@@ -6,7 +6,7 @@ class UsuariosSerializar(serializers.ModelSerializer):
         model = Usuario
         fields = '__all__'
 
-class DispositivosSerializar(serializers.ModelSerializer):
+class DispositivoSerializar(serializers.ModelSerializer):
     class Meta:
-        model = Dispositivos
+        model = Dispositivo
         fields = '__all__'
