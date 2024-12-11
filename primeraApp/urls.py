@@ -35,4 +35,7 @@ urlpatterns = [
     path('usuariosApi/', vistaApis.usuariosApi,name='usuariosApi'),
     path('usuariosListApi/', vistaApis.usuario_listado,name='usuariosListApi'),
     path('usuariosListApi/<int:pk>', vistaApis.usuarios_detalles,name='usuariosDetalleApi'),
+    path('dispositivosApi/', vistaApis.dispositivoApi,name='dispositivosApi'),
+    path('dispositivosListApi/', vistaApis.dispositivo_listado,name='dispositivosListApi'),
+    path('dispositivosListApi/<int:pk>', vistaApis.dispositivos_detalles,name='dispositivosDetalleApi'),
 ]

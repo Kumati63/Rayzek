@@ -52,3 +52,48 @@ def usuarios_detalles(request,pk):
     if request.method == 'DELETE':
         usuario.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+def dispositivosApi(request):
+    dispositivos = Dispositivo.objects.all()
+    data = {
+        'dispositivos':list(
+            dispositivos.values('nombre','casa','ubicacion','tipo')
+        )
+    }
+    return JsonResponse(data)
+
+@api_view(['GET','POST'])
+def dispositivo_listado(request):
+    if request.method == 'GET':
+        Dispositivos = Dispositivo.objects.all()
+        serializer= DispositivosSerializar(Usuarios,many=True)
+        return Response(serializer.data)
+    
+    if request.method == 'POST':
+        serializer = DispositivosSerializar(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET','PUT','DELETE'])
+def Dispositivos_detalles(request,pk):
+    try:
+        Dispositivo = Dispositivo.objects.get(id=pk)
+    except Dispositivo.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND) 
+    
+    if request.method == 'GET':
+        serializer = DispositivosSerializar(usuario)
+        return Response(serializer.data)
+    
+    if request.method == 'PUT':
+        serializer = DispositivosSerializar(usuario, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+        
+    if request.method == 'DELETE':
+        Dispositivo.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
