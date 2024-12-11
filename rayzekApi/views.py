@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
-from primeraApp.models import Usuario
-from rayzekApi.serializers import UsuariosSerializar
+from primeraApp.models import Usuario, Dispositivo
+from rayzekApi.serializers import UsuariosSerializar, DispositivoSerializar
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view

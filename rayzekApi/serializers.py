@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from primeraApp.models import Usuario
+from primeraApp.models import Dispositivo
 
 class UsuariosSerializar(serializers.ModelSerializer):
     class Meta:
